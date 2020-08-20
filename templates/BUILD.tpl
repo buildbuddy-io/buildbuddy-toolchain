@@ -198,7 +198,7 @@ llvm_cc_toolchain_config(
     cpu = "k8",
 )
 
-load("@io_buildbuddy_toolchain//:rules.bzl", "buildbuddy_cc_toolchain")
+load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy_cc_toolchain")
 
 buildbuddy_cc_toolchain("llvm_buildbuddy_cc_toolchain")
 
