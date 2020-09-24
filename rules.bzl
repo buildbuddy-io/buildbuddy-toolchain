@@ -28,6 +28,7 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{default_cc_toolchain_suite}": "llvm_cc_toolchain_suite" if rctx.attr.llvm else "ubuntu1604_cc_toolchain_suite",
         "%{default_cc_toolchain}": "llvm_cc_toolchain" if rctx.attr.llvm else "ubuntu1604_cc_toolchain",
         "%{default_docker_image}": rctx.attr.docker_image,
+        "%{default_platform}": "platform_darwin" if rctx.os.name == "mac os x" else "platform_linux",
     }
 
     rctx.template(

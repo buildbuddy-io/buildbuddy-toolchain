@@ -9,8 +9,13 @@ exports_files(glob(["bin/*", "lib/*"]))
 
 # Platform
 
+alias(
+    name = "platform", 
+    actual = "%{default_platform}",
+)
+
 platform(
-    name = "platform",
+    name = "platform_linux",
     constraint_values = [
         "@bazel_tools//platforms:x86_64",
         "@bazel_tools//platforms:linux",
@@ -24,6 +29,25 @@ platform(
         properties {
            name: "container-image"
            value: "%{default_docker_image}"
+        }
+        """,
+)
+
+platform(
+    name = "platform_darwin",
+    constraint_values = [
+        "@bazel_tools//platforms:x86_64",
+        "@bazel_tools//platforms:osx",
+        "@bazel_tools//tools/cpp:clang",
+    ],
+    remote_execution_properties = """
+        properties {
+           name: "OSFamily"
+           value:  "Darwin"
+        }
+        properties {
+           name: "container-image"
+           value: "none"
         }
         """,
 )
