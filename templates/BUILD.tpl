@@ -21,16 +21,10 @@ platform(
         "@bazel_tools//platforms:linux",
         "@bazel_tools//tools/cpp:clang",
     ],
-    remote_execution_properties = """
-        properties {
-           name: "OSFamily"
-           value:  "Linux"
-        }
-        properties {
-           name: "container-image"
-           value: "%{default_docker_image}"
-        }
-        """,
+    exec_properties = {
+        "OSFamily": "Linux",
+        "container-image": "%{default_docker_image}",
+    },
 )
 
 platform(
@@ -40,16 +34,10 @@ platform(
         "@bazel_tools//platforms:osx",
         "@bazel_tools//tools/cpp:clang",
     ],
-    remote_execution_properties = """
-        properties {
-           name: "OSFamily"
-           value:  "Darwin"
-        }
-        properties {
-           name: "container-image"
-           value: "none"
-        }
-        """,
+    exec_properties = {
+        "OSFamily": "Darwin",
+        "container-image": "none",
+    },
 )
 
 ## Java 8
