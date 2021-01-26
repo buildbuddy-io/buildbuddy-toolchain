@@ -25,8 +25,8 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{makevars_ld_flags}": "-fuse-ld=lld",
         "%{k8_additional_cxx_builtin_include_directories}": "",
         "%{darwin_additional_cxx_builtin_include_directories}": "",
-        "%{default_cc_toolchain_suite}": "llvm_cc_toolchain_suite" if rctx.attr.llvm else "ubuntu1604_cc_toolchain_suite",
-        "%{default_cc_toolchain}": "llvm_cc_toolchain" if rctx.attr.llvm else "ubuntu1604_cc_toolchain",
+        "%{default_cc_toolchain_suite}": "@local_config_cc//:toolchain" if rctx.os.name == "mac os x" else ":llvm_cc_toolchain_suite" if rctx.attr.llvm else ":ubuntu1604_cc_toolchain_suite",
+        "%{default_cc_toolchain}": ":llvm_cc_toolchain" if rctx.attr.llvm else ":ubuntu1604_cc_toolchain",
         "%{default_docker_image}": rctx.attr.docker_image,
         "%{default_platform}": "platform_darwin" if rctx.os.name == "mac os x" else "platform_linux",
     }

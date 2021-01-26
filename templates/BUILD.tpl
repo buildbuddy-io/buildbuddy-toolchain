@@ -66,12 +66,12 @@ default_java_toolchain(
 
 alias(
     name = "toolchain", 
-    actual=":%{default_cc_toolchain_suite}"
+    actual="%{default_cc_toolchain_suite}"
 )
 
 alias(
     name = "cc_toolchain", 
-    actual=":%{default_cc_toolchain}"
+    actual="%{default_cc_toolchain}"
 )
 
 
