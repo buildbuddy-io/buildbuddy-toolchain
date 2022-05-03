@@ -40,6 +40,20 @@ platform(
     },
 )
 
+platform(
+    name = "platform_darwin_arm64",
+    constraint_values = [
+        "@bazel_tools//platforms:aarch64",
+        "@bazel_tools//platforms:osx",
+        "@bazel_tools//tools/cpp:clang",
+    ],
+    exec_properties = {
+        "OSFamily": "Darwin",
+        "Arch": "arm64",
+        "container-image": "none",
+    },
+)
+
 ## Java 8
 
 java_runtime(
