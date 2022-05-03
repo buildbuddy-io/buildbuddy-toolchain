@@ -12,6 +12,15 @@ def _buildbuddy_toolchain_impl(rctx):
     relative_path_prefix = "external/%s/" % rctx.name
     toolchain_path_prefix = relative_path_prefix
 
+    # Select the correct default platform.
+    if rctx.os.name == "mac os x":
+        if rctx.os.arch == "aarch64":
+            default_platform = "platform_darwin_arm64"
+        else:
+            default_platform = "platform_darwin"
+    else:
+        default_platform = "platform_linux"
+
     substitutions = {
         "%{repo_name}": rctx.name,
         "%{llvm_version}": LLVM_VERSION,
@@ -28,9 +37,8 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{default_cc_toolchain_suite}": "@local_config_cc//:toolchain" if rctx.os.name == "mac os x" else ":llvm_cc_toolchain_suite" if rctx.attr.llvm else ":ubuntu1604_cc_toolchain_suite",
         "%{default_cc_toolchain}": ":llvm_cc_toolchain" if rctx.attr.llvm else ":ubuntu1604_cc_toolchain",
         "%{default_docker_image}": rctx.attr.docker_image,
-        "%{default_platform}": "platform_darwin" if rctx.os.name == "mac os x" else "platform_linux",
+        "%{default_platform}": default_platform,
     }
-
     rctx.template(
         "cc_toolchain_config.bzl",
         Label("//templates:cc_toolchain_config.bzl.tpl"),
