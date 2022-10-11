@@ -17,8 +17,8 @@ alias(
 platform(
     name = "platform_linux",
     constraint_values = [
-        "@bazel_tools//platforms:x86_64",
-        "@bazel_tools//platforms:linux",
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
         "@bazel_tools//tools/cpp:clang",
     ],
     exec_properties = {
@@ -30,8 +30,8 @@ platform(
 platform(
     name = "platform_darwin",
     constraint_values = [
-        "@bazel_tools//platforms:x86_64",
-        "@bazel_tools//platforms:osx",
+        "@platforms//cpu:x86_64",
+        "@platforms//os:macos",
         "@bazel_tools//tools/cpp:clang",
     ],
     exec_properties = {
@@ -64,14 +64,14 @@ java_runtime(
 
 load(
     "@bazel_tools//tools/jdk:default_java_toolchain.bzl",
-    "JDK8_JVM_OPTS",
+    %{jvm_opts_import}
     "default_java_toolchain",
     "java_runtime_files",
 )
 
 default_java_toolchain(
     name = "toolchain_jdk8",
-    jvm_opts = JDK8_JVM_OPTS,
+    jvm_opts = %{jvm_opts},
     source_version = "8",
     target_version = "8",
 )
@@ -102,13 +102,13 @@ cc_toolchain_suite(
 toolchain(
     name = "ubuntu1604_cc_toolchain",
     exec_compatible_with = [
-        "@bazel_tools//platforms:x86_64",
-        "@bazel_tools//platforms:linux",
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
         "@bazel_tools//tools/cpp:clang",
     ],
     target_compatible_with = [
         "@bazel_tools//platforms:linux",
-        "@bazel_tools//platforms:x86_64",
+        "@platforms//cpu:x86_64",
     ],
     toolchain = ":ubuntu1604_local_cc_toolchain",
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",

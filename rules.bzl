@@ -38,6 +38,10 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{default_cc_toolchain}": ":llvm_cc_toolchain" if rctx.attr.llvm else ":ubuntu1604_cc_toolchain",
         "%{default_docker_image}": rctx.attr.docker_image,
         "%{default_platform}": default_platform,
+        # Handle removal of JDK8_JVM_OPTS in bazel 6.0.0:
+        # https://github.com/bazelbuild/bazel/commit/3a0a4f3b6931fbb6303fc98eec63d4434d8aece4
+        "%{jvm_opts_import}": '"JDK8_JVM_OPTS",' if native.bazel_version < "6.0.0" else "",
+        "%{jvm_opts}": "JDK8_JVM_OPTS" if native.bazel_version < "6.0.0" else '["-Xbootclasspath/p:$(location @remote_java_tools//:javac_jar)"]',
     }
     rctx.template(
         "cc_toolchain_config.bzl",
