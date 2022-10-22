@@ -43,8 +43,8 @@ platform(
 platform(
     name = "platform_darwin_arm64",
     constraint_values = [
-        "@bazel_tools//platforms:aarch64",
-        "@bazel_tools//platforms:osx",
+        "@platforms//cpu:aarch64",
+        "@platforms//os:osx",
         "@bazel_tools//tools/cpp:clang",
     ],
     exec_properties = {
@@ -107,7 +107,7 @@ toolchain(
         "@bazel_tools//tools/cpp:clang",
     ],
     target_compatible_with = [
-        "@bazel_tools//platforms:linux",
+        "@platforms//os:linux",
         "@platforms//cpu:x86_64",
     ],
     toolchain = ":ubuntu1604_local_cc_toolchain",
