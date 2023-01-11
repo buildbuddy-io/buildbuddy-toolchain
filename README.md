@@ -1,11 +1,13 @@
 # BuildBuddy RBE Toolchain
 
-Currently supports Linux C/C++ (including CGO) & Java builds on Ubuntu 16.04.
+Currently supports Linux C/C++ (including CGO) & Java builds on Ubuntu 16.04
+or Ubuntu 20.04 (**experimental**).
 
 ## Usage instructions
 
 Add the following lines to your `WORKSPACE` file. You'll probably want to pin your version to a specific commit rather than master.
-```
+
+```python
 http_archive(
     name = "io_buildbuddy_buildbuddy_toolchain",
     sha256 = "a2a5cccec251211e2221b1587af2ce43c36d32a42f5d881737db3b546a536510",
@@ -17,26 +19,65 @@ load("@io_buildbuddy_buildbuddy_toolchain//:deps.bzl", "buildbuddy_deps")
 
 buildbuddy_deps()
 
-load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy")
+load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy_rbe_ubuntu20_04")
 
-buildbuddy(name = "buildbuddy_toolchain")
+buildbuddy_rbe_ubuntu20_04(name = "buildbuddy_rbe_ubuntu20_04")
 ```
 
 Now you can use the toolchain in your BuildBuddy RBE builds. For example:
+
 ```
-bazel build server --remote_executor=cloud.buildbuddy.io --crosstool_top=@buildbuddy_toolchain//:toolchain
+bazel build server \
+    --remote_executor=remote.buildbuddy.io \
+    --extra_execution_platforms=@buildbuddy_toolchain//:platform \
+    --host_platform=@buildbuddy_toolchain//:platform \
+    --platforms=@buildbuddy_toolchain//:platform \
+    --crosstool_top=@buildbuddy_toolchain//:toolchain
 ```
 
-If you need Java 8 support, you just need to add a few more flags:
+## Java support
+
+If you need Java support, you just need to add a few more flags:
+
 ```
---javabase=@buildbuddy_toolchain//:javabase_jdk8
---host_javabase=@buildbuddy_toolchain//:javabase_jdk8
---java_toolchain=@buildbuddy_toolchain//:toolchain_jdk8
+--javabase=@buildbuddy_toolchain//:javabase
+--host_javabase=@buildbuddy_toolchain//:javabase
+--java_toolchain=@buildbuddy_toolchain//:java_toolchain
 ```
 
-## Coming soon
+## GCC / Clang selection
 
-Ubuntu 18.04, and Darwin (Mac) support are on our roadmap.
+By default, the RBE images are configured to use GCC. If you would rather
+use Clang / LLVM, set `llvm = True` in the toolchain repository rule:
+
+```python
+buildbuddy_rbe_ubuntu20_04(name = "buildbuddy_toolchain", llvm = True)
+```
+
+## Software versions
+
+BuildBuddy's RBE images come pre-installed with the following software
+versions:
+
+### Ubuntu 16.04 image
+
+- Java 8 (javac 1.8.0_242)
+- GCC 5.4.0
+- GLIBC 2.23
+- Clang/LLVM 11.0.0
+- Python 2.7.12 (`python` in `$PATH` uses this version)
+- Python 3.6.10
+- Go 1.14.1
+
+### Ubuntu 20.04 image
+
+- Java 11.0.17
+- GCC 9.4.0
+- GLIBC 2.31
+- Clang/LLVM 15.0.0
+- Python 2.7.18 (`python` in `$PATH` uses this version)
+- Python 3.8.10
+- Go 1.19.4
 
 ## Additional resources
 

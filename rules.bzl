@@ -34,14 +34,16 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{makevars_ld_flags}": "-fuse-ld=lld",
         "%{k8_additional_cxx_builtin_include_directories}": "",
         "%{darwin_additional_cxx_builtin_include_directories}": "",
-        "%{default_cc_toolchain_suite}": "@local_config_cc//:toolchain" if rctx.os.name == "mac os x" else ":llvm_cc_toolchain_suite" if rctx.attr.llvm else ":ubuntu1604_cc_toolchain_suite",
-        "%{default_cc_toolchain}": ":llvm_cc_toolchain" if rctx.attr.llvm else ":ubuntu1604_cc_toolchain",
+        "%{default_cc_toolchain_suite}": "@local_config_cc//:toolchain" if rctx.os.name == "mac os x" else ":llvm_cc_toolchain_suite" if rctx.attr.llvm else ":ubuntu_cc_toolchain_suite",
+        "%{default_cc_toolchain}": ":llvm_cc_toolchain" if rctx.attr.llvm else ":ubuntu_cc_toolchain",
+        "%{gcc_version}": rctx.attr.gcc_version,
         "%{default_docker_image}": rctx.attr.docker_image,
         "%{default_platform}": default_platform,
+        "%{java_version}": rctx.attr.java_version,
         # Handle removal of JDK8_JVM_OPTS in bazel 6.0.0:
         # https://github.com/bazelbuild/bazel/commit/3a0a4f3b6931fbb6303fc98eec63d4434d8aece4
-        "%{jvm_opts_import}": '"JDK8_JVM_OPTS",' if native.bazel_version < "6.0.0" else "",
-        "%{jvm_opts}": "JDK8_JVM_OPTS" if native.bazel_version < "6.0.0" else '["-Xbootclasspath/p:$(location @remote_java_tools//:javac_jar)"]',
+        "%{jvm_opts_import}": '"JDK8_JVM_OPTS",' if native.bazel_version < "6.0.0" and rctx.attr.java_version == "8" else "",
+        "%{jvm_opts}": "JDK8_JVM_OPTS" if native.bazel_version < "6.0.0" and rctx.attr.java_version == "8" else '["-Xbootclasspath/p:$(location @remote_java_tools//:javac_jar)"]',
     }
     rctx.template(
         "cc_toolchain_config.bzl",
@@ -101,20 +103,30 @@ buildbuddy_toolchain = repository_rule(
     attrs = {
         "llvm": attr.bool(),
         "docker_image": attr.string(),
+        "java_version": attr.string(),
+        "gcc_version": attr.string(),
     },
     local = False,
     implementation = _buildbuddy_toolchain_impl,
 )
 
-def buildbuddy(name, llvm = False, docker_image = "none"):
-    buildbuddy_toolchain(name = name, llvm = llvm, docker_image = docker_image)
+# TODO(bduffany): Pin this to a specific SHA once the image is relatively stable.
+UBUNTU20_04_IMAGE = "docker://gcr.io/flame-public/rbe-ubuntu20-04:latest"
 
-def register_buildbuddy_toolchain(name, llvm = True, docker_image = "none"):
-    http_archive(
-        name = "rules_cc",
-        sha256 = "b6f34b3261ec02f85dbc5a8bdc9414ce548e1f5f67e000d7069571799cb88b25",
-        strip_prefix = "rules_cc-726dd8157557f1456b3656e26ab21a1646653405",
-        urls = ["https://github.com/bazelbuild/rules_cc/archive/726dd8157557f1456b3656e26ab21a1646653405.tar.gz"],
+def buildbuddy_rbe_ubuntu20_04(name, llvm = False):
+    buildbuddy_toolchain(
+        name = name,
+        llvm = llvm,
+        docker_image = UBUNTU20_04_IMAGE,
+        java_version = "11",
+        gcc_version = "9",
     )
 
-    buildbuddy_toolchain(name = name, llvm = llvm, docker_image = docker_image)
+def buildbuddy_rbe_ubuntu16_04(name, llvm = False, docker_image = "none"):
+    buildbuddy_toolchain(
+        name = name,
+        llvm = llvm,
+        docker_image = docker_image,
+        java_version = "8",
+        gcc_version = "5",
+    )
