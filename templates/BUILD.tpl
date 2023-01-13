@@ -23,7 +23,7 @@ platform(
     ],
     exec_properties = {
         "OSFamily": "Linux",
-        "container-image": "%{default_docker_image}",
+        "container-image": "%{default_container_image}",
     },
 )
 
@@ -54,12 +54,12 @@ platform(
     },
 )
 
-## Java 8
+## Java %{java_version}
 
 java_runtime(
-    name = "javabase_jdk8",
+    name = "javabase",
     srcs = [],
-    java_home = "/usr/lib/jvm/java-8-openjdk-amd64",
+    java_home = "/usr/lib/jvm/java-%{java_version}-openjdk-amd64",
 )
 
 load(
@@ -70,10 +70,10 @@ load(
 )
 
 default_java_toolchain(
-    name = "toolchain_jdk8",
+    name = "java_toolchain",
     jvm_opts = %{jvm_opts},
-    source_version = "8",
-    target_version = "8",
+    source_version = "%{java_version}",
+    target_version = "%{java_version}",
 )
 
 ## Defaults
@@ -92,15 +92,15 @@ alias(
 ## CC
 
 cc_toolchain_suite(
-    name = "ubuntu1604_cc_toolchain_suite",
+    name = "ubuntu_cc_toolchain_suite",
     toolchains = {
-        "k8|compiler": ":ubuntu1604_local_cc_toolchain",
-        "k8": ":ubuntu1604_local_cc_toolchain",
+        "k8|compiler": ":ubuntu_local_cc_toolchain",
+        "k8": ":ubuntu_local_cc_toolchain",
     },
 )
 
 toolchain(
-    name = "ubuntu1604_cc_toolchain",
+    name = "ubuntu_cc_toolchain",
     exec_compatible_with = [
         "@platforms//cpu:x86_64",
         "@platforms//os:linux",
@@ -110,14 +110,14 @@ toolchain(
         "@platforms//os:linux",
         "@platforms//cpu:x86_64",
     ],
-    toolchain = ":ubuntu1604_local_cc_toolchain",
+    toolchain = ":ubuntu_local_cc_toolchain",
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )
 
 cc_toolchain(
-    name = "ubuntu1604_local_cc_toolchain",
+    name = "ubuntu_local_cc_toolchain",
     toolchain_identifier = "local",
-    toolchain_config = ":ubuntu1604_cc_toolchain_config",
+    toolchain_config = ":ubuntu_cc_toolchain_config",
     all_files = ":compiler_deps",
     ar_files = ":compiler_deps",
     as_files = ":compiler_deps",
@@ -132,7 +132,7 @@ cc_toolchain(
 load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 
 cc_toolchain_config(
-    name = "ubuntu1604_cc_toolchain_config",
+    name = "ubuntu_cc_toolchain_config",
     cpu = "k8",
     compiler = "compiler",
     toolchain_identifier = "local",
@@ -141,14 +141,16 @@ cc_toolchain_config(
     target_libc = "local",
     abi_version = "local",
     abi_libc_version = "local",
-    cxx_builtin_include_directories = ["/usr/lib/gcc/x86_64-linux-gnu/5/include",
-    "/usr/local/include",
-    "/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed",
-    "/usr/include/x86_64-linux-gnu",
-    "/usr/include",
-    "/usr/include/c++/5",
-    "/usr/include/x86_64-linux-gnu/c++/5",
-    "/usr/include/c++/5/backward"],
+    cxx_builtin_include_directories = [
+        "/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include",
+        "/usr/local/include",
+        "/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include-fixed",
+        "/usr/include/x86_64-linux-gnu",
+        "/usr/include",
+        "/usr/include/c++/%{gcc_version}",
+        "/usr/include/x86_64-linux-gnu/c++/%{gcc_version}",
+        "/usr/include/c++/%{gcc_version}/backward",
+    ],
     tool_paths = {"ar": "/usr/bin/ar",
         "ld": "/usr/bin/ld",
         "cpp": "/usr/bin/cpp",
