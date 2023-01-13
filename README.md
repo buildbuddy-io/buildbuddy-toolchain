@@ -19,9 +19,9 @@ load("@io_buildbuddy_buildbuddy_toolchain//:deps.bzl", "buildbuddy_deps")
 
 buildbuddy_deps()
 
-load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy_rbe_ubuntu20_04")
+load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy")
 
-buildbuddy_rbe_ubuntu20_04(name = "buildbuddy_rbe_ubuntu20_04")
+buildbuddy(name = "buildbuddy_toolchain")
 ```
 
 Now you can use the toolchain in your BuildBuddy RBE builds. For example:
@@ -51,15 +51,25 @@ By default, the RBE images are configured to use GCC. If you would rather
 use Clang / LLVM, set `llvm = True` in the toolchain repository rule:
 
 ```python
-buildbuddy_rbe_ubuntu20_04(name = "buildbuddy_toolchain", llvm = True)
+buildbuddy(name = "buildbuddy_toolchain", llvm = True)
 ```
 
-## Software versions
+## Linux image variants
 
-BuildBuddy's RBE images come pre-installed with the following software
-versions:
+The following Linux images are available for remote execution:
 
-### Ubuntu 16.04 image
+### Ubuntu 16.04 image (**default**)
+
+This image is the default when using the BuildBuddy toolchain. To
+reference it explicitly, you can declare the toolchain like this:
+
+```python
+load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy", "UBUNTU16_04_IMAGE")
+
+buildbuddy(name = "buildbuddy_toolchain", container_image = UBUNTU16_04_IMAGE)
+```
+
+This image includes the following build tools:
 
 - Java 8 (javac 1.8.0_242)
 - GCC 5.4.0
@@ -69,7 +79,17 @@ versions:
 - Python 3.6.10
 - Go 1.14.1
 
-### Ubuntu 20.04 image
+### Ubuntu 20.04 image (**experimental**)
+
+To use Ubuntu 20.04, import the toolchain as follows:
+
+```python
+load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy", "UBUNTU20_04_IMAGE")
+
+buildbuddy(name = "buildbuddy_toolchain", container_image = UBUNTU20_04_IMAGE)
+```
+
+This image includes the following build tools:
 
 - Java 11.0.17
 - GCC 9.4.0

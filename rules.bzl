@@ -37,7 +37,7 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{default_cc_toolchain_suite}": "@local_config_cc//:toolchain" if rctx.os.name == "mac os x" else ":llvm_cc_toolchain_suite" if rctx.attr.llvm else ":ubuntu_cc_toolchain_suite",
         "%{default_cc_toolchain}": ":llvm_cc_toolchain" if rctx.attr.llvm else ":ubuntu_cc_toolchain",
         "%{gcc_version}": rctx.attr.gcc_version,
-        "%{default_docker_image}": rctx.attr.docker_image,
+        "%{default_container_image}": rctx.attr.container_image,
         "%{default_platform}": default_platform,
         "%{java_version}": rctx.attr.java_version,
         # Handle removal of JDK8_JVM_OPTS in bazel 6.0.0:
@@ -99,10 +99,10 @@ def buildbuddy_cc_toolchain(name):
         toolchain_config = "llvm_cc_toolchain_config",
     )
 
-buildbuddy_toolchain = repository_rule(
+_buildbuddy_toolchain = repository_rule(
     attrs = {
         "llvm": attr.bool(),
-        "docker_image": attr.string(),
+        "container_image": attr.string(),
         "java_version": attr.string(),
         "gcc_version": attr.string(),
     },
@@ -110,23 +110,53 @@ buildbuddy_toolchain = repository_rule(
     implementation = _buildbuddy_toolchain_impl,
 )
 
-# TODO(bduffany): Pin this to a specific SHA once the image is relatively stable.
-UBUNTU20_04_IMAGE = "docker://gcr.io/flame-public/rbe-ubuntu20-04:latest"
+# Specifying an empty container_image value means "use the default image."
+DEFAULT_IMAGE = ""
 
-def buildbuddy_rbe_ubuntu20_04(name, llvm = False):
-    buildbuddy_toolchain(
+UBUNTU16_04_IMAGE = "gcr.io/flame-public/executor-docker-default:v1.6.0"
+
+UBUNTU20_04_IMAGE = "gcr.io/flame-public/rbe-ubuntu20-04:latest"
+
+def buildbuddy(name, container_image = "", llvm = False, java_version = "", gcc_version = ""):
+    default_tool_versions = _default_tool_versions(container_image)
+
+    _buildbuddy_toolchain(
         name = name,
+        container_image = _container_image_prop(container_image),
         llvm = llvm,
-        docker_image = UBUNTU20_04_IMAGE,
-        java_version = "11",
-        gcc_version = "9",
+        java_version = java_version or default_tool_versions["java"],
+        gcc_version = gcc_version or default_tool_versions["gcc"],
     )
 
-def buildbuddy_rbe_ubuntu16_04(name, llvm = False, docker_image = "none"):
-    buildbuddy_toolchain(
-        name = name,
-        llvm = llvm,
-        docker_image = docker_image,
-        java_version = "8",
-        gcc_version = "5",
-    )
+def _default_tool_versions(container_image):
+    if _is_same_image(container_image, UBUNTU20_04_IMAGE):
+        return {"java": "11", "gcc": "9"}
+
+    return {"java": "8", "gcc": "5"}
+
+def _is_same_image(a, b):
+    """Returns whether two images are the same, NOT including tag or digest."""
+    image_a, _, _ = _split_image(a)
+    image_b, _, _ = _split_image(b)
+
+    return image_a == image_b
+
+def _split_image(image):
+    if image.startswith("docker://"):
+        image = image[len("docker://"):]
+
+    digest = ""
+    tag = ""
+    if "@" in image:
+        image, digest = image.split("@")
+    elif ":" in image:
+        image, tag = image.split(":")
+
+    return image, tag, digest
+
+def _container_image_prop(image):
+    if image == "" or image == "none":
+        return image
+    if not image.startswith("docker://"):
+        return "docker://" + image
+    return image

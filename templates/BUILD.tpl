@@ -23,7 +23,7 @@ platform(
     ],
     exec_properties = {
         "OSFamily": "Linux",
-        "container-image": "%{default_docker_image}",
+        "container-image": "%{default_container_image}",
     },
 )
 
