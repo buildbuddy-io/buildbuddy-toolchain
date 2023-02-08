@@ -150,6 +150,7 @@ cc_toolchain_config(
         "/usr/include/c++/%{gcc_version}",
         "/usr/include/x86_64-linux-gnu/c++/%{gcc_version}",
         "/usr/include/c++/%{gcc_version}/backward",
+        %{extra_cxx_builtin_include_directories}
     ],
     tool_paths = {"ar": "/usr/bin/ar",
         "ld": "/usr/bin/ld",
