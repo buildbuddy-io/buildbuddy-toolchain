@@ -24,6 +24,7 @@ platform(
     exec_properties = {
         "OSFamily": "Linux",
         "container-image": "%{default_container_image}",
+        "dockerNetwork": "%{default_docker_network}",
     },
 )
 
@@ -37,6 +38,7 @@ platform(
     exec_properties = {
         "OSFamily": "Darwin",
         "container-image": "none",
+        "dockerNetwork": "%{default_docker_network}",
     },
 )
 
@@ -51,6 +53,7 @@ platform(
         "OSFamily": "Darwin",
         "Arch": "arm64",
         "container-image": "none",
+        "dockerNetwork": "%{default_docker_network}",
     },
 )
 
