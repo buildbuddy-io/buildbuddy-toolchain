@@ -15,12 +15,7 @@ alias(
 )
 
 platform(
-    name = "platform_linux",
-    constraint_values = [
-        "@platforms//cpu:x86_64",
-        "@platforms//os:linux",
-        "@bazel_tools//tools/cpp:clang",
-    ],
+    name = "platform_exec_linux",
     exec_properties = {
         "OSFamily": "Linux",
         "container-image": "%{default_container_image}",
@@ -29,12 +24,7 @@ platform(
 )
 
 platform(
-    name = "platform_darwin",
-    constraint_values = [
-        "@platforms//cpu:x86_64",
-        "@platforms//os:macos",
-        "@bazel_tools//tools/cpp:clang",
-    ],
+    name = "platform_exec_darwin",
     exec_properties = {
         "OSFamily": "Darwin",
         "container-image": "none",
@@ -42,19 +32,56 @@ platform(
     },
 )
 
+
 platform(
-    name = "platform_darwin_arm64",
+    name = "platform_bare_linux",
+    constraint_values = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    parents = ["platform_exec_linux"],
+)
+
+platform(
+    name = "platform_bare_darwin",
+    constraint_values = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:macos",
+    ],
+    parents = ["platform_exec_darwin"],
+)
+
+platform(
+    name = "platform_bare_darwin_arm64",
     constraint_values = [
         "@platforms//cpu:aarch64",
         "@platforms//os:osx",
+    ],
+    parents = ["platform_exec_darwin"],
+)
+
+platform(
+    name = "platform_linux",
+    constraint_values = [
         "@bazel_tools//tools/cpp:clang",
     ],
-    exec_properties = {
-        "OSFamily": "Darwin",
-        "Arch": "arm64",
-        "container-image": "none",
-        "dockerNetwork": "%{default_docker_network}",
-    },
+    parents = ["platform_bare_linux"],
+)
+
+platform(
+    name = "platform_darwin",
+    constraint_values = [
+        "@bazel_tools//tools/cpp:clang",
+    ],
+    parents = ["platform_bare_darwin"],
+)
+
+platform(
+    name = "platform_darwin_arm64",
+    constraint_values = [
+        "@bazel_tools//tools/cpp:clang",
+    ],
+    parents = ["platform_bare_darwin_arm64"],
 )
 
 ## Java %{java_version}
