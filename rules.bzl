@@ -13,13 +13,15 @@ def _buildbuddy_toolchain_impl(rctx):
     toolchain_path_prefix = relative_path_prefix
 
     # Select the correct default platform.
+    default_platform = "platform"
+    if rctx.attr.external_cc:
+        default_platform += "_bare"
     if rctx.os.name == "mac os x":
+        default_platform += "_darwin"
         if rctx.os.arch == "aarch64":
-            default_platform = "platform_darwin_arm64"
-        else:
-            default_platform = "platform_darwin"
+            default_platform += "_arm64"
     else:
-        default_platform = "platform_linux"
+        default_platform += "_linux"
 
     substitutions = {
         "%{repo_name}": rctx.name,
@@ -106,6 +108,7 @@ _buildbuddy_toolchain = repository_rule(
         "container_image": attr.string(),
         "java_version": attr.string(),
         "gcc_version": attr.string(),
+        "external_cc": attr.bool(),
     },
     local = False,
     implementation = _buildbuddy_toolchain_impl,
@@ -118,7 +121,7 @@ UBUNTU16_04_IMAGE = "gcr.io/flame-public/executor-docker-default:v1.6.0"
 
 UBUNTU20_04_IMAGE = "gcr.io/flame-public/rbe-ubuntu20-04:latest"
 
-def buildbuddy(name, container_image = "", llvm = False, java_version = "", gcc_version = ""):
+def buildbuddy(name, container_image = "", llvm = False, java_version = "", gcc_version = "", external_cc = False):
     default_tool_versions = _default_tool_versions(container_image)
 
     _buildbuddy_toolchain(
@@ -127,6 +130,7 @@ def buildbuddy(name, container_image = "", llvm = False, java_version = "", gcc_
         llvm = llvm,
         java_version = java_version or default_tool_versions["java"],
         gcc_version = gcc_version or default_tool_versions["gcc"],
+        external_cc = external_cc
     )
 
 def _default_tool_versions(container_image):
