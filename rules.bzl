@@ -14,7 +14,10 @@ def _buildbuddy_toolchain_impl(rctx):
 
     # Select the correct default platform.
     default_platform = "platform"
-    if rctx.attr.external_cc:
+    external_cc_override = rctx.os.environ.get("BUILDBUDDY_TOOLCHAIN_OVERRIDE_USE_EXTERNAL_CC", "")
+    if external_cc_override == "0":
+        pass
+    elif external_cc_override == "1" or rctx.attr.external_cc:
         default_platform += "_bare"
     if rctx.os.name == "mac os x":
         default_platform += "_darwin"
@@ -112,6 +115,7 @@ _buildbuddy_toolchain = repository_rule(
     },
     local = False,
     implementation = _buildbuddy_toolchain_impl,
+    environ = ["BUILDBUDDY_TOOLCHAIN_OVERRIDE_USE_EXTERNAL_CC"],
 )
 
 # Specifying an empty container_image value means "use the default image."
