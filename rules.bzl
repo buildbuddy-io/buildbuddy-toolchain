@@ -114,7 +114,7 @@ _buildbuddy_toolchain = repository_rule(
 # Specifying an empty container_image value means "use the default image."
 DEFAULT_IMAGE = ""
 
-UBUNTU16_04_IMAGE = "gcr.io/flame-public/executor-docker-default:v1.6.0"
+UBUNTU16_04_IMAGE = "gcr.io/flame-public/executor-docker-default:enterprise-v1.6.0"
 
 UBUNTU20_04_IMAGE = "gcr.io/flame-public/rbe-ubuntu20-04:latest"
 
