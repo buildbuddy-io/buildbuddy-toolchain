@@ -24,6 +24,7 @@ platform(
     exec_properties = {
         "OSFamily": "Linux",
         "container-image": "%{default_container_image}",
+        "dockerNetwork": "%{default_docker_network}",
     },
 )
 
@@ -37,6 +38,7 @@ platform(
     exec_properties = {
         "OSFamily": "Darwin",
         "container-image": "none",
+        "dockerNetwork": "%{default_docker_network}",
     },
 )
 
@@ -51,6 +53,7 @@ platform(
         "OSFamily": "Darwin",
         "Arch": "arm64",
         "container-image": "none",
+        "dockerNetwork": "%{default_docker_network}",
     },
 )
 
@@ -175,7 +178,7 @@ cc_toolchain_config(
     "-ffunction-sections",
     "-fdata-sections"],
     dbg_compile_flags = ["-g"],
-    cxx_flags = ["-std=c++0x"],
+    cxx_flags = ["-std=c++17"],
     link_flags = ["-fuse-ld=gold",
     "-Wl,-no-as-needed",
     "-Wl,-z,relro,-z,now",

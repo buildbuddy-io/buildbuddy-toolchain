@@ -38,6 +38,7 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{default_cc_toolchain}": ":llvm_cc_toolchain" if rctx.attr.llvm else ":ubuntu_cc_toolchain",
         "%{gcc_version}": rctx.attr.gcc_version,
         "%{default_container_image}": rctx.attr.container_image,
+        "%{default_docker_network}": "off",
         "%{default_platform}": default_platform,
         "%{java_version}": rctx.attr.java_version,
         # Handle removal of JDK8_JVM_OPTS in bazel 6.0.0:
@@ -115,7 +116,7 @@ _buildbuddy_toolchain = repository_rule(
 # Specifying an empty container_image value means "use the default image."
 DEFAULT_IMAGE = ""
 
-UBUNTU16_04_IMAGE = "gcr.io/flame-public/executor-docker-default:v1.6.0"
+UBUNTU16_04_IMAGE = "gcr.io/flame-public/executor-docker-default:enterprise-v1.6.0"
 
 UBUNTU20_04_IMAGE = "gcr.io/flame-public/rbe-ubuntu20-04:latest"
 

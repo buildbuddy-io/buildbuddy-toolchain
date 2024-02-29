@@ -99,6 +99,20 @@ This image includes the following build tools:
 - Python 3.8.10
 - Go 1.19.4
 
+## Networking
+
+If you need networking, you must enable it for the actions that need it. There
+is a performance hit when networking is enabled because networking resources
+need to be setup and torn down for each action. Because of the performance hit,
+you probably want to enable networking just for the actions that need it by
+adding the following exec_properties:
+
+```
++    exec_properties = {
++        "dockerNetwork":"bridge",
++    },
+```
+
 ## Additional resources
 
 - For more advanced use cases, check out Bazel's [bazel-toolchains repo](https://github.com/bazelbuild/bazel-toolchains) and the [docs on configuring C++ toolchains](https://docs.bazel.build/versions/master/tutorial/cc-toolchain-config.html).
