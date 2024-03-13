@@ -66,6 +66,7 @@ def _buildbuddy_toolchain_impl(rctx):
         Label("//templates:Makevars.tpl"),
         substitutions,
     )
+    substitutions["%{extra_cxx_builtin_include_directories}"] = "\n".join(['%s"%s",' % (" " * 8, x) for x in rctx.attr.extra_cxx_builtin_include_directories])
     rctx.template(
         "BUILD",
         Label("//templates:BUILD.tpl"),
@@ -106,6 +107,7 @@ _buildbuddy_toolchain = repository_rule(
         "container_image": attr.string(),
         "java_version": attr.string(),
         "gcc_version": attr.string(),
+        "extra_cxx_builtin_include_directories": attr.string_list(),
     },
     local = False,
     implementation = _buildbuddy_toolchain_impl,
@@ -118,7 +120,7 @@ UBUNTU16_04_IMAGE = "gcr.io/flame-public/executor-docker-default:enterprise-v1.6
 
 UBUNTU20_04_IMAGE = "gcr.io/flame-public/rbe-ubuntu20-04:latest"
 
-def buildbuddy(name, container_image = "", llvm = False, java_version = "", gcc_version = ""):
+def buildbuddy(name, container_image = "", llvm = False, java_version = "", gcc_version = "", extra_cxx_builtin_include_directories = []):
     default_tool_versions = _default_tool_versions(container_image)
 
     _buildbuddy_toolchain(
@@ -127,6 +129,7 @@ def buildbuddy(name, container_image = "", llvm = False, java_version = "", gcc_
         llvm = llvm,
         java_version = java_version or default_tool_versions["java"],
         gcc_version = gcc_version or default_tool_versions["gcc"],
+        extra_cxx_builtin_include_directories = extra_cxx_builtin_include_directories,
     )
 
 def _default_tool_versions(container_image):
