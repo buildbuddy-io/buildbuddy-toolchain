@@ -40,10 +40,10 @@ Bazel provides support for Java toolchains out of the box.
 You can enabled the Java toolchain with the following flags:
 
 ```
---java_language_version=11
---tool_java_language_version=11
---java_runtime_version=remotejdk_11
---tool_java_runtime_version=remotejdk_11
+--java_language_version=17
+--tool_java_language_version=17
+--java_runtime_version=remotejdk_17
+--tool_java_runtime_version=remotejdk_17
 ```
 
 Available verions are listed in [Bazel's User Manual](https://bazel.build/docs/user-manual#java-language-version)
@@ -122,7 +122,7 @@ adding the following exec_properties:
 
 - Check out our official documentation for [RBE Setup](https://www.buildbuddy.io/docs/rbe-setup)
 - For more advanced use cases, check out Bazel's [bazel-toolchains repo](https://github.com/bazelbuild/bazel-toolchains) and the [docs on configuring C++ toolchains](https://docs.bazel.build/versions/master/tutorial/cc-toolchain-config.html).
-- Many thanks to the team at Grail who's [LLVM toolchain repo](https://github.com/bazel-contrib/toolchains_llvm) served as the basis for this repo.
+- Many thanks to the maintainers of [LLVM toolchain repo](https://github.com/bazel-contrib/toolchains_llvm), which served as the basis for this repo.
 - Major props to the team at VSCO who's [toolchain repo](https://github.com/vsco/bazel-toolchains) paved the way for using LLVM as a Bazel toolchain.
 
 ## Other CC toolchains
