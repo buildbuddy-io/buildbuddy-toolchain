@@ -22,7 +22,6 @@ def _buildbuddy_toolchain_impl(rctx):
         default_platform = "platform_linux"
 
     substitutions = {
-        "%{repo_name}": rctx.name,
         "%{llvm_version}": LLVM_VERSION,
         "%{toolchain_path_prefix}": toolchain_path_prefix,
         "%{tools_path_prefix}": "",
@@ -30,10 +29,8 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{sysroot_path}": "",
         "%{sysroot_prefix}": "",
         "%{sysroot_label}": "",
-        "%{absolute_paths}": "False",
         "%{makevars_ld_flags}": "-fuse-ld=lld",
         "%{k8_additional_cxx_builtin_include_directories}": "",
-        "%{darwin_additional_cxx_builtin_include_directories}": "",
         "%{default_cc_toolchain_suite}": "@local_config_cc//:toolchain" if rctx.os.name == "mac os x" else ":llvm_cc_toolchain_suite" if rctx.attr.llvm else ":ubuntu_cc_toolchain_suite",
         "%{default_cc_toolchain}": ":llvm_cc_toolchain" if rctx.attr.llvm else ":ubuntu_cc_toolchain",
         "%{gcc_version}": rctx.attr.gcc_version,
