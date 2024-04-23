@@ -53,11 +53,6 @@ def _buildbuddy_toolchain_impl(rctx):
         Label("//templates:cc_wrapper.sh.tpl"),
         substitutions,
     )
-    rctx.template(
-        "Makevars",
-        Label("//templates:Makevars.tpl"),
-        substitutions,
-    )
     substitutions["%{extra_cxx_builtin_include_directories}"] = "\n".join(['%s"%s",' % (" " * 8, x) for x in rctx.attr.extra_cxx_builtin_include_directories])
     rctx.template(
         "BUILD",

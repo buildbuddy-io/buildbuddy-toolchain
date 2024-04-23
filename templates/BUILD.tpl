@@ -11,8 +11,6 @@ load(":llvm_cc_toolchain_config.bzl", "llvm_cc_toolchain_config")
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files(["Makevars"])
-
 # Some targets may need to directly depend on these files.
 exports_files(glob(["bin/*", "lib/*"]))
 
