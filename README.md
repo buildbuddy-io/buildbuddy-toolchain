@@ -46,7 +46,7 @@ You can enabled the Java toolchain with the following flags:
 --tool_java_runtime_version=remotejdk_11
 ```
 
-Available verions ar listed in [Bazel's User Manual](https://bazel.build/docs/user-manual#java-language-version)
+Available verions are listed in [Bazel's User Manual](https://bazel.build/docs/user-manual#java-language-version)
 
 If you need a custom Java toolchain, see Bazel's docs on [Java toolchain configuration](https://bazel.build/docs/bazel-and-java#config-java-toolchains).
 
@@ -127,7 +127,7 @@ adding the following exec_properties:
 
 ## Other CC toolchains
 
-For advance users who want to write your own CC toolchain, here are some existing CC toolchains that you could use as reference:
+For advanced users who want to write their own CC toolchain, these existing CC toolchains that can serve as references:
 
 - Bazel's [default local CC toolchains](https://cs.opensource.google/bazel/bazel/+/master:tools/cpp/;drc=bd2da6e977172398bb6612c3a45e91fd1192961a)
 
