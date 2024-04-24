@@ -123,7 +123,7 @@ UBUNTU20_04_IMAGE = "gcr.io/flame-public/rbe-ubuntu20-04:latest"
 def buildbuddy(name, container_image = "", llvm = False, java_version = "", gcc_version = "", extra_cxx_builtin_include_directories = []):
     if java_version != "":
         print("""
-WARNING: java_version support in buildBuddy_toolchain is deprecated and will be removed in a future release.
+WARNING: java_version support in buildbuddy-toolchain is deprecated and will be removed in a future release.
 Please visit https://www.buildbuddy.io/docs/rbe-setup#java-toolchain for the recommended Java toolchain setup.""")
 
     default_tool_versions = _default_tool_versions(container_image)
