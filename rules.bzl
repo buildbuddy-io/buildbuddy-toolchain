@@ -44,11 +44,6 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{jvm_opts}": "JDK8_JVM_OPTS" if native.bazel_version < "6.0.0" and rctx.attr.java_version == "8" else '["-Xbootclasspath/p:$(location @remote_java_tools//:javac_jar)"]',
     }
     rctx.template(
-        "cc_toolchain_config.bzl",
-        Label("//templates:cc_toolchain_config.bzl.tpl"),
-        substitutions,
-    )
-    rctx.template(
         "llvm_cc_toolchain_config.bzl",
         Label("//templates:llvm_cc_toolchain_config.bzl.tpl"),
         substitutions,
@@ -58,16 +53,15 @@ def _buildbuddy_toolchain_impl(rctx):
         Label("//templates:cc_wrapper.sh.tpl"),
         substitutions,
     )
-    rctx.template(
-        "Makevars",
-        Label("//templates:Makevars.tpl"),
-        substitutions,
-    )
     substitutions["%{extra_cxx_builtin_include_directories}"] = "\n".join(['%s"%s",' % (" " * 8, x) for x in rctx.attr.extra_cxx_builtin_include_directories])
     rctx.template(
         "BUILD",
         Label("//templates:BUILD.tpl"),
         substitutions,
+    )
+    rctx.symlink(
+        Label("//templates:cc_toolchain_config.bzl"),
+        "cc_toolchain_config.bzl",
     )
 
     rctx.symlink("/usr/bin/ar", "bin/ar")

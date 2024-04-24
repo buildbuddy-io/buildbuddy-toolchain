@@ -1,13 +1,20 @@
-package(default_visibility = ["//visibility:public"])
-
+load(
+    "@bazel_tools//tools/jdk:default_java_toolchain.bzl",
+    %{jvm_opts_import}
+    "default_java_toolchain",
+    "java_runtime_files",
+)
 load("@rules_cc//cc:defs.bzl", "cc_toolchain", "cc_toolchain_suite")
+load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy_cc_toolchain")
+load(":cc_toolchain_config.bzl", "cc_toolchain_config")
+load(":llvm_cc_toolchain_config.bzl", "llvm_cc_toolchain_config")
 
-exports_files(["Makevars"])
+package(default_visibility = ["//visibility:public"])
 
 # Some targets may need to directly depend on these files.
 exports_files(glob(["bin/*", "lib/*"]))
 
-# Platform
+## Platforms
 
 alias(
     name = "platform", 
@@ -18,6 +25,20 @@ platform(
     name = "platform_linux",
     constraint_values = [
         "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+        "@bazel_tools//tools/cpp:clang",
+    ],
+    exec_properties = {
+        "OSFamily": "Linux",
+        "container-image": "%{default_container_image}",
+        "dockerNetwork": "%{default_docker_network}",
+    },
+)
+
+platform(
+    name = "platform_linux_arm64",
+    constraint_values = [
+        "@platforms//cpu:aarch64",
         "@platforms//os:linux",
         "@bazel_tools//tools/cpp:clang",
     ],
@@ -63,13 +84,6 @@ java_runtime(
     name = "javabase",
     srcs = [],
     java_home = "/usr/lib/jvm/java-%{java_version}-openjdk-amd64",
-)
-
-load(
-    "@bazel_tools//tools/jdk:default_java_toolchain.bzl",
-    %{jvm_opts_import}
-    "default_java_toolchain",
-    "java_runtime_files",
 )
 
 default_java_toolchain(
@@ -131,8 +145,6 @@ cc_toolchain(
     strip_files = ":empty",
     supports_param_files = 1,
 )
-
-load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 
 cc_toolchain_config(
     name = "ubuntu_cc_toolchain_config",
@@ -222,15 +234,10 @@ toolchain(
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )
 
-
-load(":llvm_cc_toolchain_config.bzl", "llvm_cc_toolchain_config")
-
 llvm_cc_toolchain_config(
     name = "llvm_cc_toolchain_config",
     cpu = "k8",
 )
-
-load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy_cc_toolchain")
 
 buildbuddy_cc_toolchain("llvm_buildbuddy_cc_toolchain")
 
