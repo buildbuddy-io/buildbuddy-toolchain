@@ -1,7 +1,6 @@
 # BuildBuddy RBE Toolchain
 
-Currently supports Linux C/C++ (including CGO) & Java builds on Ubuntu 16.04
-or Ubuntu 20.04 (**experimental**).
+Currently supports Linux C/C++ (including CGO) & Java builds on Ubuntu 16.04 or Ubuntu 20.04.
 
 ## Usage instructions
 
@@ -37,13 +36,19 @@ bazel build server \
 
 ## Java support
 
-If you need Java support, you just need to add a few more flags:
+Bazel provides support for Java toolchains out of the box.
+You can enabled the Java toolchain with the following flags:
 
 ```
---javabase=@buildbuddy_toolchain//:javabase
---host_javabase=@buildbuddy_toolchain//:javabase
---java_toolchain=@buildbuddy_toolchain//:java_toolchain
+--java_language_version=17
+--tool_java_language_version=17
+--java_runtime_version=remotejdk_17
+--tool_java_runtime_version=remotejdk_17
 ```
+
+Available verions are listed in [Bazel's User Manual](https://bazel.build/docs/user-manual#java-language-version)
+
+If you need a custom Java toolchain, see Bazel's docs on [Java toolchain configuration](https://bazel.build/docs/bazel-and-java#config-java-toolchains).
 
 ## GCC / Clang selection
 
@@ -79,7 +84,7 @@ This image includes the following build tools:
 - Python 3.6.10
 - Go 1.14.1
 
-### Ubuntu 20.04 image (**experimental**)
+### Ubuntu 20.04 image
 
 To use Ubuntu 20.04, import the toolchain as follows:
 
@@ -115,6 +120,23 @@ adding the following exec_properties:
 
 ## Additional resources
 
+- Check out our official documentation for [RBE Setup](https://www.buildbuddy.io/docs/rbe-setup)
 - For more advanced use cases, check out Bazel's [bazel-toolchains repo](https://github.com/bazelbuild/bazel-toolchains) and the [docs on configuring C++ toolchains](https://docs.bazel.build/versions/master/tutorial/cc-toolchain-config.html).
-- Many thanks to the team at Grail who's [LLVM toolchain repo](https://github.com/grailbio/bazel-toolchain) served as the basis for this repo.
+- Many thanks to the maintainers of [LLVM toolchain repo](https://github.com/bazel-contrib/toolchains_llvm), which served as the basis for this repo.
 - Major props to the team at VSCO who's [toolchain repo](https://github.com/vsco/bazel-toolchains) paved the way for using LLVM as a Bazel toolchain.
+
+## Other CC toolchains
+
+For advanced users who want to write their own CC toolchain, these existing CC toolchains that can serve as references:
+
+- Bazel's [default local CC toolchains](https://cs.opensource.google/bazel/bazel/+/master:tools/cpp/;drc=bd2da6e977172398bb6612c3a45e91fd1192961a)
+
+- Uber's [Zig-based CC Toolchain](https://github.com/uber/hermetic_cc_toolchain/)
+
+- [LLVM toolchain](https://github.com/bazel-contrib/toolchains_llvm)
+
+- [MUSL toolchain](https://github.com/bazel-contrib/musl-toolchain)
+
+- [GCC toolchain](https://github.com/f0rmiga/gcc-toolchain)
+
+- Apple_support's [XCode toolchain](https://github.com/bazelbuild/apple_support/blob/a40bcaa218ee423168dd3f9af8085e6bacac2f9f/crosstool/cc_toolchain_config.bzl#L14)
