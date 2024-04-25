@@ -1,0 +1,46 @@
+# A bzlmod example will be provided separately
+common --noenable_bzlmod
+
+
+# Use a minimal set of environment variables for action execution to improve
+# build hermeticity and remote cache hits.
+common --incompatible_strict_action_env
+
+
+# Enable BuildBuddy build event service
+common --bes_results_url=https://app.buildbuddy.io/invocation/
+common --bes_backend=grpcs://remote.buildbuddy.io
+# Enable BuildBuddy Remote Execution
+common:remote --remote_timeout=3600
+common:remote --remote_executor=grpcs://remote.buildbuddy.io
+
+
+# Target Linux platform when build remotely
+#
+# Usage:
+#
+#   $ bazel build --config=remote-linux //...
+#
+common:remote-linux --config=remote
+common:remote-linux --platforms=@buildbuddy_toolchain//:platform_linux
+# Register "execution platforms" and "cc toolchains" using Bazel flag.
+#
+# These could also be defined statically in WORKSPACE files
+# using `register_execution_platforms` and `register_toolchains` global
+# starlark functions.
+#
+# Use flag `--toolchain_resolution_debug=cpp` to troubleshoot Bazel's toolchain
+# resolution and selection.
+#
+# References:
+#   - https://bazel.build/rules/lib/globals/workspace#register_execution_platforms
+#   - https://bazel.build/rules/lib/globals/workspace#register_toolchains
+common:remote-linux --extra_execution_platforms=@buildbuddy_toolchain//:platform_linux
+common:remote-linux --extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain
+
+
+# Separate file to keep API Key that should have the follow flag
+#
+#   common --remote_header=x-buildbuddy-api-key=********
+#
+try-import %workspace%/user.bazelrc
