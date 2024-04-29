@@ -77,6 +77,11 @@ def _buildbuddy_toolchain_impl(rctx):
         "include_directory_paths_msvc",
     )
 
+    rctx.template(
+        "bin/cl.ps1",
+        Label("//templates:windows_exec.ps1.tpl"),
+        substitutions | {"%{exec_name}": "cl"},
+    )
     if not rctx.os.name.lower().startswith("windows"):
         rctx.symlink("/usr/bin/ar", "bin/ar")
         rctx.symlink("/usr/bin/ld", "bin/ld")

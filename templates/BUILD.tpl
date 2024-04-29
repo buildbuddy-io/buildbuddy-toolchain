@@ -396,7 +396,10 @@ filegroup(
 
 filegroup(
     name = "msvc_compiler_files",
-    srcs = [":include_directory_paths_msvc"],
+    srcs = [
+        "bin/cl.ps1",
+        ":include_directory_paths_msvc",
+    ],
 )
 
 windows_cc_toolchain_config(
@@ -437,7 +440,7 @@ windows_cc_toolchain_config(
         "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Lib\\%{windows_kits_version}\\ucrt\\x64",
         "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Tools\\MSVC\\%{msvc_version}\\lib\\x64",
     ]),
-    msvc_cl_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/cl.exe",
+    msvc_cl_path = "bin/cl.ps1",
     msvc_ml_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/ml64.exe",
     msvc_link_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/link.exe",
     msvc_lib_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/lib.exe",
@@ -453,8 +456,8 @@ windows_cc_toolchain_config(
     tool_paths = {
         "ar": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/lib.exe",
         "ml": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/ml64.exe",
-        "cpp": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/cl.exe",
-        "gcc": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/cl.exe",
+        "cpp": "bin/cl.ps1",
+        "gcc": "bin/cl.ps1",
         "gcov": "wrapper/bin/msvc_nop.bat",
         "ld": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/link.exe",
         "nm": "wrapper/bin/msvc_nop.bat",
