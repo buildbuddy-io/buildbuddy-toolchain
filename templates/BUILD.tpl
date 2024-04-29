@@ -8,6 +8,7 @@ load("@rules_cc//cc:defs.bzl", "cc_toolchain", "cc_toolchain_suite")
 load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy_cc_toolchain")
 load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 load(":llvm_cc_toolchain_config.bzl", "llvm_cc_toolchain_config")
+load(":windows_cc_toolchain_config.bzl", windows_cc_toolchain_config = "cc_toolchain_config")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -75,6 +76,18 @@ platform(
         "Arch": "arm64",
         "container-image": "none",
         "dockerNetwork": "%{default_docker_network}",
+    },
+)
+
+platform(
+    name = "platform_windows",
+    constraint_values = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+        "@bazel_tools//tools/cpp:msvc",
+    ],
+    exec_properties = {
+        "OSFamily": "Windows",
     },
 )
 
@@ -377,4 +390,110 @@ filegroup(
 filegroup(
     name = "compiler_deps",
     srcs = glob(["extra_tools/**"], allow_empty = True) # + [":builtin_include_directory_paths"],
+)
+
+## Windows MSVC Toolchain
+
+filegroup(
+    name = "msvc_compiler_files",
+    srcs = [":include_directory_paths_msvc"],
+)
+
+windows_cc_toolchain_config(
+    name = "msvc_toolchain_config",
+    cpu = "x64_windows",
+    compiler = "msvc-cl",
+    host_system_name = "local",
+    target_system_name = "local",
+    target_libc = "msvcrt",
+    abi_version = "local",
+    abi_libc_version = "local",
+    toolchain_identifier = "msvc_toolchain_config",
+    msvc_env_tmp = "C:\\Users\\User\\AppData\\Local\\Temp",
+    msvc_env_path = ";".join([
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\CommonExtensions\\Microsoft\\FSharp\\Tools",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\VC\\VCPackages",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\Tools\\",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\MSBuild\\Current\\bin\\Roslyn",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Team Tools\\DiagnosticsHub\\Collector",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Tools\\MSVC\\%{msvc_version}\\bin\\HostX64\\x64",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\\\MSBuild\\Current\\Bin\\amd64",
+    ]),
+    msvc_env_include = ";".join([
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\cppwinrt",
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\shared",
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\um",
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\winrt",
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\ucrt",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Auxiliary\\VS\\include",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Tools\\MSVC\\%{msvc_version}\\include",
+    ]),
+    msvc_env_lib = ";".join([
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Lib\\%{windows_kits_version}\\um\\x64",
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Lib\\%{windows_kits_version}\\ucrt\\x64",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Tools\\MSVC\\%{msvc_version}\\lib\\x64",
+    ]),
+    msvc_cl_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/cl.exe",
+    msvc_ml_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/ml64.exe",
+    msvc_link_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/link.exe",
+    msvc_lib_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/lib.exe",
+    cxx_builtin_include_directories = [
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\cppwinrt",
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\shared",
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\um",
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\winrt",
+        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\ucrt",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Auxiliary\\VS\\include",
+        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Tools\\MSVC\\%{msvc_version}\\include",
+    ],
+    tool_paths = {
+        "ar": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/lib.exe",
+        "ml": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/ml64.exe",
+        "cpp": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/cl.exe",
+        "gcc": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/cl.exe",
+        "gcov": "wrapper/bin/msvc_nop.bat",
+        "ld": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/link.exe",
+        "nm": "wrapper/bin/msvc_nop.bat",
+        "objcopy": "wrapper/bin/msvc_nop.bat",
+        "objdump": "wrapper/bin/msvc_nop.bat",
+        "strip": "wrapper/bin/msvc_nop.bat",
+    },
+    archiver_flags = ["/MACHINE:X64"],
+    default_link_flags = ["/MACHINE:X64"],
+    dbg_mode_debug_flag = "/DEBUG:FULL",
+    fastbuild_mode_debug_flag = "/DEBUG:FASTLINK",
+    supports_parse_showincludes = True,
+)
+
+cc_toolchain(
+    name = "msvc_toolchain",
+    toolchain_identifier = "msvc_toolchain_config",
+    toolchain_config = ":msvc_toolchain_config",
+    all_files = ":empty",
+    ar_files = ":empty",
+    as_files = ":msvc_compiler_files",
+    compiler_files = ":msvc_compiler_files",
+    dwp_files = ":empty",
+    linker_files = ":empty",
+    objcopy_files = ":empty",
+    strip_files = ":empty",
+    supports_param_files = True,
+)
+
+toolchain(
+    name = "windows_msvc_cc_toolchain",
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    toolchain = ":msvc_toolchain",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )
