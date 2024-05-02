@@ -40,8 +40,8 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{java_version}": rctx.attr.java_version,
         # Handle removal of JDK8_JVM_OPTS in bazel 6.0.0:
         # https://github.com/bazelbuild/bazel/commit/3a0a4f3b6931fbb6303fc98eec63d4434d8aece4
-        "%{jvm_opts_import}": '"JDK8_JVM_OPTS",' if native.bazel_version < "6.0.0" and rctx.attr.java_version == "8" else "",
-        "%{jvm_opts}": "JDK8_JVM_OPTS" if native.bazel_version < "6.0.0" and rctx.attr.java_version == "8" else '["-Xbootclasspath/p:$(location @remote_java_tools//:javac_jar)"]',
+        "%{jvm_opts_import}": '"JDK8_JVM_OPTS",' if native.bazel_version and native.bazel_version < "6.0.0" and rctx.attr.java_version == "8" else "",
+        "%{jvm_opts}": "JDK8_JVM_OPTS" if native.bazel_version and native.bazel_version < "6.0.0" and rctx.attr.java_version == "8" else '["-Xbootclasspath/p:$(location @remote_java_tools//:javac_jar)"]',
         "%{msvc_edition}": rctx.attr.msvc_edition,
         "%{msvc_release}": rctx.attr.msvc_release,
         "%{msvc_version}": rctx.attr.msvc_version,
