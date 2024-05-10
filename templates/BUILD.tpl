@@ -13,7 +13,7 @@ load(":windows_cc_toolchain_config.bzl", windows_cc_toolchain_config = "cc_toolc
 package(default_visibility = ["//visibility:public"])
 
 # Some targets may need to directly depend on these files.
-exports_files(glob(["bin/*", "lib/*"]))
+exports_files(glob(["bin/*", "lib/*"], allow_empty = True))
 
 ## Platforms
 
@@ -274,10 +274,13 @@ filegroup(
 
 filegroup(
     name = "include",
-    srcs = glob([
-        "include/c++/**",
-        "lib/clang/%{llvm_version}/include/**",
-    ]),
+    srcs = glob(
+        [
+            "include/c++/**",
+            "lib/clang/%{llvm_version}/include/**",
+        ],
+        allow_empty = True,
+    ),
 )
 
 filegroup(
@@ -292,6 +295,7 @@ filegroup(
             "lib/libclang*.a",
             "lib/liblld*.a",
         ],
+        allow_empty = True,
     ),
 )
 
