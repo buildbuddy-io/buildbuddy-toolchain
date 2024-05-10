@@ -132,7 +132,7 @@ UBUNTU20_04_IMAGE = "gcr.io/flame-public/rbe-ubuntu20-04:latest"
 
 def buildbuddy(
         name,
-        container_image = "",
+        container_image = UBUNTU20_04_IMAGE,
         llvm = False,
         java_version = "",
         gcc_version = "",
