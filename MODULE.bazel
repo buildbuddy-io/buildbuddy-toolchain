@@ -4,6 +4,11 @@
 #
 # For more details, please check https://github.com/bazelbuild/bazel/issues/18958
 ###############################################################################
-module(name = "buildbuddy_toolchain")
+module(
+    name = "buildbuddy_toolchain",
+    version = "0.0.0",
+    repo_name = "io_buildbuddy_buildbuddy_toolchain",
+)
 
 bazel_dep(name = "rules_cc", version = "0.0.9")
+bazel_dep(name = "platforms", version = "0.0.10")
