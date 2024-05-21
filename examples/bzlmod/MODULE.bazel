@@ -1,0 +1,10 @@
+module(name = "example")
+
+bazel_dep(name = "buildbuddy_toolchain", repo_name = "buildbuddy")
+local_path_override(
+    module_name = "buildbuddy_toolchain",
+    path = "../../",
+)
+
+buildbuddy = use_extension("@buildbuddy//:extensions.bzl", "buildbuddy")
+use_repo(buildbuddy, "buildbuddy_toolchain")
