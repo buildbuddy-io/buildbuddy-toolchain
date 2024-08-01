@@ -77,7 +77,7 @@ def _buildbuddy_toolchain_impl(rctx):
         rctx.symlink("/usr/bin/ld.gold", "bin/ld.gold")
 
     # Repository implementation functions can be restarted, keep expensive ops at the end.
-    if (rctx.attr.llvm):
+    if rctx.attr.llvm:
         print("BuildBuddy toolchain LLVM support is deprecated.\nPlease use https://github.com/bazel-contrib/toolchains_llvm/ instead.")
 
 def buildbuddy_cc_toolchain(name):
