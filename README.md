@@ -50,15 +50,6 @@ Available verions are listed in [Bazel's User Manual](https://bazel.build/docs/u
 
 If you need a custom Java toolchain, see Bazel's docs on [Java toolchain configuration](https://bazel.build/docs/bazel-and-java#config-java-toolchains).
 
-## GCC / Clang selection
-
-By default, the RBE images are configured to use GCC. If you would rather
-use Clang / LLVM, set `llvm = True` in the toolchain repository rule:
-
-```python
-buildbuddy(name = "buildbuddy_toolchain", llvm = True)
-```
-
 ## Linux image variants
 
 The following Linux images are available for remote execution:

@@ -2,11 +2,6 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 load("@rules_cc//cc:defs.bzl", _cc_toolchain = "cc_toolchain")
 
-LLVM_VERSION = "8.0.0"
-LLVM_DOWNLOAD_URL = "https://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz"
-LLVM_SHA256 = "87b88d620284d1f0573923e6f7cc89edccf11d19ebaec1cfb83b4f09ac5db09c"
-LLVM_STRIP_PREFIX = "clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04"
-
 def _buildbuddy_toolchain_impl(rctx):
     repo_path = str(rctx.path(""))
     relative_path_prefix = "external/%s/" % rctx.name
@@ -22,7 +17,6 @@ def _buildbuddy_toolchain_impl(rctx):
         default_platform = "platform_linux"
 
     substitutions = {
-        "%{llvm_version}": LLVM_VERSION,
         "%{toolchain_path_prefix}": toolchain_path_prefix,
         "%{tools_path_prefix}": "",
         "%{debug_toolchain_path_prefix}": relative_path_prefix,
@@ -84,7 +78,7 @@ def _buildbuddy_toolchain_impl(rctx):
 
     # Repository implementation functions can be restarted, keep expensive ops at the end.
     if (rctx.attr.llvm):
-        rctx.download_and_extract([LLVM_DOWNLOAD_URL], sha256 = LLVM_SHA256, stripPrefix = LLVM_STRIP_PREFIX)
+        print("BuildBuddy toolchain LLVM support is deprecated.\nPlease use https://github.com/bazel-contrib/toolchains_llvm/ instead.")
 
 def buildbuddy_cc_toolchain(name):
     native.filegroup(name = name + "-all-files", srcs = [":all_components"])

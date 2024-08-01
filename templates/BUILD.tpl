@@ -7,7 +7,6 @@ load(
 load("@rules_cc//cc:defs.bzl", "cc_toolchain", "cc_toolchain_suite")
 load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy_cc_toolchain")
 load(":cc_toolchain_config.bzl", "cc_toolchain_config")
-load(":llvm_cc_toolchain_config.bzl", "llvm_cc_toolchain_config")
 load(":windows_cc_toolchain_config.bzl", windows_cc_toolchain_config = "cc_toolchain_config")
 
 package(default_visibility = ["//visibility:public"])
@@ -121,6 +120,16 @@ alias(
 
 ## CC
 
+filegroup(
+    name = "empty",
+    srcs = [],
+)
+
+filegroup(
+    name = "compiler_deps",
+    srcs = glob(["extra_tools/**"], allow_empty = True),
+)
+
 cc_toolchain_suite(
     name = "ubuntu_cc_toolchain_suite",
     toolchains = {
@@ -221,179 +230,6 @@ cc_toolchain_config(
     coverage_compile_flags = ["--coverage"],
     coverage_link_flags = ["--coverage"],
     supports_start_end_lib = True,
-)
-
-## LLVM toolchain
-
-cc_toolchain_suite(
-    name = "llvm_cc_toolchain_suite",
-    toolchains = {
-        "k8|clang": ":llvm_buildbuddy_cc_toolchain",
-        "k8": ":llvm_buildbuddy_cc_toolchain",
-    },
-)
-
-toolchain(
-    name = "llvm_cc_toolchain",
-    exec_compatible_with = [
-        "@platforms//cpu:x86_64",
-        "@platforms//os:linux",
-    ],
-    target_compatible_with = [
-        "@platforms//cpu:x86_64",
-        "@platforms//os:linux",
-    ],
-    toolchain = ":llvm_buildbuddy_cc_toolchain",
-    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
-)
-
-llvm_cc_toolchain_config(
-    name = "llvm_cc_toolchain_config",
-    cpu = "k8",
-)
-
-buildbuddy_cc_toolchain("llvm_buildbuddy_cc_toolchain")
-
-filegroup(
-    name = "clang",
-    srcs = [
-        "bin/clang",
-        "bin/clang++",
-        "bin/clang-cpp",
-    ],
-)
-
-filegroup(
-    name = "ld",
-    srcs = [
-        "bin/ld.lld",
-        "bin/ld",
-        "bin/ld.gold",  # Dummy file on non-linux.
-    ],
-)
-
-filegroup(
-    name = "include",
-    srcs = glob(
-        [
-            "include/c++/**",
-            "lib/clang/%{llvm_version}/include/**",
-        ],
-        allow_empty = True,
-    ),
-)
-
-filegroup(
-    name = "lib",
-    srcs = glob(
-        [
-            "lib/lib*.a",
-            "lib/clang/%{llvm_version}/lib/**/*.a",
-        ],
-        exclude = [
-            "lib/libLLVM*.a",
-            "lib/libclang*.a",
-            "lib/liblld*.a",
-        ],
-        allow_empty = True,
-    ),
-)
-
-filegroup(
-    name = "compiler_components",
-    srcs = [
-        ":clang",
-        ":include",
-        ":sysroot_components",
-    ],
-)
-
-filegroup(
-    name = "ar",
-    srcs = ["bin/llvm-ar"],
-)
-
-filegroup(
-    name = "as",
-    srcs = [
-        "bin/clang",
-        "bin/llvm-as",
-    ],
-)
-
-filegroup(
-    name = "nm",
-    srcs = ["bin/llvm-nm"],
-)
-
-filegroup(
-    name = "objcopy",
-    srcs = ["bin/llvm-objcopy"],
-)
-
-filegroup(
-    name = "objdump",
-    srcs = ["bin/llvm-objdump"],
-)
-
-filegroup(
-    name = "profdata",
-    srcs = ["bin/llvm-profdata"],
-)
-
-filegroup(
-    name = "dwp",
-    srcs = ["bin/llvm-dwp"],
-)
-
-filegroup(
-    name = "ranlib",
-    srcs = ["bin/llvm-ranlib"],
-)
-
-filegroup(
-    name = "readelf",
-    srcs = ["bin/llvm-readelf"],
-)
-
-filegroup(
-    name = "binutils_components",
-    srcs = glob(["bin/*"]),
-)
-
-filegroup(
-    name = "linker_components",
-    srcs = [
-        ":clang",
-        ":ld",
-        ":ar",
-        ":lib",
-        ":sysroot_components",
-    ],
-)
-
-filegroup(
-    name = "all_components",
-    srcs = [
-        ":binutils_components",
-        ":compiler_components",
-        ":linker_components",
-    ],
-)
-
-filegroup(
-    name = "sysroot_components",
-    srcs = [%{sysroot_label}],
-)
-
-filegroup(
-    name = "empty",
-    srcs = [],
-)
-
-filegroup(
-    name = "compiler_deps",
-    srcs = glob(["extra_tools/**"], allow_empty = True) # + [":builtin_include_directory_paths"],
 )
 
 ## Windows MSVC Toolchain
