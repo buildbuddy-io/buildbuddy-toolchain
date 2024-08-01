@@ -26,7 +26,7 @@ platform(
     constraint_values = [
         "@platforms//cpu:x86_64",
         "@platforms//os:linux",
-        "@bazel_tools//tools/cpp:clang",
+        "@bazel_tools//tools/cpp:gcc",
     ],
     exec_properties = {
         "OSFamily": "Linux",
@@ -40,7 +40,7 @@ platform(
     constraint_values = [
         "@platforms//cpu:aarch64",
         "@platforms//os:linux",
-        "@bazel_tools//tools/cpp:clang",
+        "@bazel_tools//tools/cpp:gcc",
     ],
     exec_properties = {
         "OSFamily": "Linux",
@@ -54,7 +54,7 @@ platform(
     constraint_values = [
         "@platforms//cpu:x86_64",
         "@platforms//os:macos",
-        "@bazel_tools//tools/cpp:clang",
+        "@bazel_tools//tools/cpp:gcc",
     ],
     exec_properties = {
         "OSFamily": "Darwin",
@@ -68,7 +68,7 @@ platform(
     constraint_values = [
         "@platforms//cpu:aarch64",
         "@platforms//os:osx",
-        "@bazel_tools//tools/cpp:clang",
+        "@bazel_tools//tools/cpp:gcc",
     ],
     exec_properties = {
         "OSFamily": "Darwin",
@@ -143,7 +143,7 @@ toolchain(
     exec_compatible_with = [
         "@platforms//cpu:x86_64",
         "@platforms//os:linux",
-        "@bazel_tools//tools/cpp:clang",
+        "@bazel_tools//tools/cpp:gcc",
     ],
     target_compatible_with = [
         "@platforms//os:linux",
