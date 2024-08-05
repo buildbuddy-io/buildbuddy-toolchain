@@ -2,11 +2,6 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 load("@rules_cc//cc:defs.bzl", _cc_toolchain = "cc_toolchain")
 
-LLVM_VERSION = "8.0.0"
-LLVM_DOWNLOAD_URL = "https://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz"
-LLVM_SHA256 = "87b88d620284d1f0573923e6f7cc89edccf11d19ebaec1cfb83b4f09ac5db09c"
-LLVM_STRIP_PREFIX = "clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04"
-
 def _buildbuddy_toolchain_impl(rctx):
     repo_path = str(rctx.path(""))
     relative_path_prefix = "external/%s/" % rctx.name
@@ -22,7 +17,6 @@ def _buildbuddy_toolchain_impl(rctx):
         default_platform = "platform_linux"
 
     substitutions = {
-        "%{llvm_version}": LLVM_VERSION,
         "%{toolchain_path_prefix}": toolchain_path_prefix,
         "%{tools_path_prefix}": "",
         "%{debug_toolchain_path_prefix}": relative_path_prefix,
@@ -31,8 +25,8 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{sysroot_label}": "",
         "%{makevars_ld_flags}": "-fuse-ld=lld",
         "%{k8_additional_cxx_builtin_include_directories}": "",
-        "%{default_cc_toolchain_suite}": "@local_config_cc//:toolchain" if rctx.os.name == "mac os x" else ":llvm_cc_toolchain_suite" if rctx.attr.llvm else ":ubuntu_cc_toolchain_suite",
-        "%{default_cc_toolchain}": ":llvm_cc_toolchain" if rctx.attr.llvm else ":ubuntu_cc_toolchain",
+        "%{default_cc_toolchain_suite}": "@local_config_cc//:toolchain" if rctx.os.name == "mac os x" else ":ubuntu_cc_toolchain_suite",
+        "%{default_cc_toolchain}": ":ubuntu_cc_toolchain",
         "%{gcc_version}": rctx.attr.gcc_version,
         "%{default_container_image}": rctx.attr.container_image,
         "%{default_docker_network}": "off",
@@ -48,11 +42,6 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{windows_kits_release}": rctx.attr.windows_kits_release,
         "%{windows_kits_version}": rctx.attr.windows_kits_version,
     }
-    rctx.template(
-        "llvm_cc_toolchain_config.bzl",
-        Label("//templates:llvm_cc_toolchain_config.bzl.tpl"),
-        substitutions,
-    )
     rctx.template(
         "bin/cc_wrapper.sh",  # Co-located with the linker to help rules_go.
         Label("//templates:cc_wrapper.sh.tpl"),
@@ -83,28 +72,11 @@ def _buildbuddy_toolchain_impl(rctx):
         rctx.symlink("/usr/bin/ld.gold", "bin/ld.gold")
 
     # Repository implementation functions can be restarted, keep expensive ops at the end.
-    if (rctx.attr.llvm):
-        rctx.download_and_extract([LLVM_DOWNLOAD_URL], sha256 = LLVM_SHA256, stripPrefix = LLVM_STRIP_PREFIX)
+    if rctx.attr.llvm:
+        print("BuildBuddy toolchain LLVM support is deprecated.\nPlease use https://github.com/bazel-contrib/toolchains_llvm/ instead.")
 
 def buildbuddy_cc_toolchain(name):
-    native.filegroup(name = name + "-all-files", srcs = [":all_components"])
-    native.filegroup(name = name + "-archiver-files", srcs = [":ar"])
-    native.filegroup(name = name + "-assembler-files", srcs = [":as"])
-    native.filegroup(name = name + "-compiler-files", srcs = [":compiler_components"])
-    native.filegroup(name = name + "-linker-files", srcs = [":linker_components"])
-    _cc_toolchain(
-        name = name,
-        all_files = name + "-all-files",
-        ar_files = name + "-archiver-files",
-        as_files = name + "-assembler-files",
-        compiler_files = name + "-compiler-files",
-        dwp_files = ":empty",
-        linker_files = name + "-linker-files",
-        objcopy_files = ":objcopy",
-        strip_files = ":empty",
-        supports_param_files = 1,
-        toolchain_config = "llvm_cc_toolchain_config",
-    )
+    print("buildbuddy_cc_toolchain support is deprecated.\nPlease use @buildbuddy_toolchain//:ubuntu_cc_toolchain instead.")
 
 _buildbuddy_toolchain = repository_rule(
     attrs = {
