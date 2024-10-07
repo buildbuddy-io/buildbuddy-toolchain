@@ -140,13 +140,13 @@ cc_toolchain_suite(
 toolchain(
     name = "ubuntu_cc_toolchain",
     exec_compatible_with = [
-        "@platforms//cpu:x86_64",
+        "@platforms//cpu:%{platform_local_arch_target}",
         "@platforms//os:linux",
         "@bazel_tools//tools/cpp:gcc",
     ],
     target_compatible_with = [
         "@platforms//os:linux",
-        "@platforms//cpu:x86_64",
+        "@platforms//cpu:%{platform_local_arch_target}",
     ],
     toolchain = ":ubuntu_local_cc_toolchain",
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
@@ -178,13 +178,13 @@ cc_toolchain_config(
     abi_version = "local",
     abi_libc_version = "local",
     cxx_builtin_include_directories = [
-        "/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include",
+        "/usr/lib/gcc/%{linux_gnu_include_dirname}/%{gcc_version}/include",
         "/usr/local/include",
-        "/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include-fixed",
-        "/usr/include/x86_64-linux-gnu",
+        "/usr/lib/gcc/%{linux_gnu_include_dirname}/%{gcc_version}/include-fixed",
+        "/usr/include/%{linux_gnu_include_dirname}",
         "/usr/include",
         "/usr/include/c++/%{gcc_version}",
-        "/usr/include/x86_64-linux-gnu/c++/%{gcc_version}",
+        "/usr/include/%{linux_gnu_include_dirname}/c++/%{gcc_version}",
         "/usr/include/c++/%{gcc_version}/backward",
         %{extra_cxx_builtin_include_directories}
     ],
