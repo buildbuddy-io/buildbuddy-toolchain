@@ -17,7 +17,7 @@ def _buildbuddy_toolchain_impl(rctx):
         default_platform = "platform_linux"
 
     default_container_image = rctx.attr.container_image
-    if default_container_image is None or default_container_image == "":
+    if default_container_image == None or default_container_image == "":
         if rctx.os.arch == "aarch64":
             default_container_image = UBUNTU22_04_ARM64_IMAGE
         else:
@@ -176,7 +176,7 @@ def _split_image(image):
     return image, tag, digest
 
 def _container_image_prop(image):
-    if image is None or image == "" or image == "none":
+    if image == None or image == "" or image == "none":
         return image
     if not image.startswith("docker://"):
         return "docker://" + image
