@@ -16,6 +16,13 @@ def _buildbuddy_toolchain_impl(rctx):
     else:
         default_platform = "platform_linux"
 
+    default_container_image = rctx.attr.container_image
+    if default_container_image is None or default_container_image == "":
+        if rctx.os.arch == "aarch64":
+            default_container_image = UBUNTU22_04_ARM64_IMAGE
+        else:
+            default_container_image = UBUNTU20_04_IMAGE
+
     substitutions = {
         "%{toolchain_path_prefix}": toolchain_path_prefix,
         "%{tools_path_prefix}": "",
@@ -29,7 +36,7 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{default_cc_toolchain_suite}": "@local_config_cc//:toolchain" if rctx.os.name == "mac os x" else ":ubuntu_cc_toolchain_suite",
         "%{default_cc_toolchain}": ":ubuntu_cc_toolchain",
         "%{gcc_version}": rctx.attr.gcc_version,
-        "%{default_container_image}": rctx.attr.container_image,
+        "%{default_container_image}": default_container_image,
         "%{default_docker_network}": "off",
         "%{default_platform}": default_platform,
         "%{platform_local_arch_target}": "aarch64" if rctx.os.arch == "aarch64" else "x86_64",
@@ -104,9 +111,11 @@ UBUNTU16_04_IMAGE = "gcr.io/flame-public/executor-docker-default:enterprise-v1.6
 
 UBUNTU20_04_IMAGE = "gcr.io/flame-public/rbe-ubuntu20-04:latest"
 
+UBUNTU22_04_ARM64_IMAGE = "gcr.io/flame-public/rbe-ubuntu22-04:latest-arm64"
+
 def buildbuddy(
         name,
-        container_image = UBUNTU20_04_IMAGE,
+        container_image = None,
         llvm = False,
         java_version = "",
         gcc_version = "",
@@ -141,6 +150,9 @@ def _default_tool_versions(container_image):
     if _is_same_image(container_image, UBUNTU20_04_IMAGE):
         return {"java": "11", "gcc": "9"}
 
+    if _is_same_image(container_image, UBUNTU22_04_ARM64_IMAGE):
+        return {"java": "11", "gcc": "9"}
+
     return {"java": "8", "gcc": "5"}
 
 def _is_same_image(a, b):
@@ -164,7 +176,7 @@ def _split_image(image):
     return image, tag, digest
 
 def _container_image_prop(image):
-    if image == "" or image == "none":
+    if image is None or image == "" or image == "none":
         return image
     if not image.startswith("docker://"):
         return "docker://" + image
