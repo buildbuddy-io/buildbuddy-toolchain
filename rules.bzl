@@ -23,6 +23,8 @@ def _buildbuddy_toolchain_impl(rctx):
         else:
             default_container_image = UBUNTU20_04_IMAGE
 
+    default_tool_versions = _default_tool_versions(default_container_image)
+
     substitutions = {
         "%{toolchain_path_prefix}": toolchain_path_prefix,
         "%{tools_path_prefix}": "",
@@ -35,12 +37,12 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{k8_additional_cxx_builtin_include_directories}": "",
         "%{default_cc_toolchain_suite}": "@local_config_cc//:toolchain" if rctx.os.name == "mac os x" else ":ubuntu_cc_toolchain_suite",
         "%{default_cc_toolchain}": ":ubuntu_cc_toolchain",
-        "%{gcc_version}": rctx.attr.gcc_version,
+        "%{gcc_version}": rctx.attr.gcc_version or default_tool_versions["gcc"],
         "%{default_container_image}": default_container_image,
         "%{default_docker_network}": "off",
         "%{default_platform}": default_platform,
         "%{platform_local_arch_target}": "aarch64" if rctx.os.arch == "aarch64" else "x86_64",
-        "%{java_version}": rctx.attr.java_version,
+        "%{java_version}": rctx.attr.java_version or default_tool_versions["java"],
         # Handle removal of JDK8_JVM_OPTS in bazel 6.0.0:
         # https://github.com/bazelbuild/bazel/commit/3a0a4f3b6931fbb6303fc98eec63d4434d8aece4
         "%{jvm_opts_import}": '"JDK8_JVM_OPTS",' if native.bazel_version and native.bazel_version < "6.0.0" and rctx.attr.java_version == "8" else "",
@@ -130,14 +132,12 @@ def buildbuddy(
 WARNING: java_version support in buildbuddy-toolchain is deprecated and will be removed in a future release.
 Please visit https://www.buildbuddy.io/docs/rbe-setup#java-toolchain for the recommended Java toolchain setup.""")
 
-    default_tool_versions = _default_tool_versions(container_image)
-
     _buildbuddy_toolchain(
         name = name,
         container_image = _container_image_prop(container_image),
         llvm = llvm,
-        java_version = java_version or default_tool_versions["java"],
-        gcc_version = gcc_version or default_tool_versions["gcc"],
+        java_version = java_version,
+        gcc_version = gcc_version,
         msvc_edition = msvc_edition,
         msvc_release = msvc_release,
         msvc_version = msvc_version,
