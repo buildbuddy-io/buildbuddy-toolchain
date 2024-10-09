@@ -44,7 +44,7 @@ platform(
     ],
     exec_properties = {
         "OSFamily": "Linux",
-        "container-image": "%{default_container_image}",
+        "container-image": "%{default_x86_64_container_image}",
         "dockerNetwork": "%{default_docker_network}",
     },
 )
@@ -59,7 +59,7 @@ platform(
     exec_properties = {
         "OSFamily": "Linux",
         "Arch": "arm64",
-        "container-image": "%{default_container_image}",
+        "container-image": "%{default_arm64_container_image}",
         "dockerNetwork": "%{default_docker_network}",
     },
 )

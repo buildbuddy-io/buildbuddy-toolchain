@@ -16,12 +16,18 @@ def _buildbuddy_toolchain_impl(rctx):
     else:
         default_platform = "platform_linux"
 
-    default_container_image = rctx.attr.container_image
+    default_x86_64_container_image = rctx.attr.x86_64_container_image
+    if default_x86_64_container_image == None or default_x86_64_container_image == "":
+        default_x86_64_container_image = _container_image_prop(UBUNTU20_04_IMAGE)
+    default_arm64_container_image = rctx.attr.arm64_container_image
+    if default_arm64_container_image == None or default_arm64_container_image == "":
+        default_arm64_container_image = _container_image_prop(UBUNTU22_04_ARM64_IMAGE)
+    default_container_image = _container_image_prop(rctx.attr.container_image)
     if default_container_image == None or default_container_image == "":
         if rctx.os.arch == "aarch64":
-            default_container_image = _container_image_prop(UBUNTU22_04_ARM64_IMAGE)
+            default_container_image = default_arm64_container_image
         else:
-            default_container_image = _container_image_prop(UBUNTU20_04_IMAGE)
+            default_container_image = default_x86_64_container_image
 
     default_tool_versions = _default_tool_versions(default_container_image)
 
@@ -39,6 +45,8 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{default_cc_toolchain}": ":ubuntu_cc_toolchain",
         "%{gcc_version}": rctx.attr.gcc_version or default_tool_versions["gcc"],
         "%{default_container_image}": default_container_image,
+        "%{default_x86_64_container_image}": default_container_image,
+        "%{default_arm64_container_image}": default_container_image,
         "%{default_docker_network}": "off",
         "%{default_platform}": default_platform,
         "%{default_arch_exec_property}": "\"Arch\": \"arm64\"," if rctx.os.arch == "aarch64" else "",
@@ -94,6 +102,8 @@ _buildbuddy_toolchain = repository_rule(
     attrs = {
         "llvm": attr.bool(),
         "container_image": attr.string(),
+        "x86_64_container_image": attr.string(),
+        "arm64_container_image": attr.string(),
         "java_version": attr.string(),
         "gcc_version": attr.string(),
         "msvc_edition": attr.string(values = ["Community", "Professional", "Enterprise"]),
@@ -127,7 +137,9 @@ def buildbuddy(
         msvc_version = "14.39.33519",
         windows_kits_release = "10",
         windows_kits_version = "10.0.22621.0",
-        extra_cxx_builtin_include_directories = []):
+        extra_cxx_builtin_include_directories = [],
+        x86_64_container_image = None,
+        arm64_container_image = None):
     if java_version != "":
         print("""
 WARNING: java_version support in buildbuddy-toolchain is deprecated and will be removed in a future release.
@@ -135,7 +147,9 @@ Please visit https://www.buildbuddy.io/docs/rbe-setup#java-toolchain for the rec
 
     _buildbuddy_toolchain(
         name = name,
-        container_image = _container_image_prop(container_image),
+        container_image = container_image,
+        x86_64_container_image = x86_64_container_image,
+        arm64_container_image = arm64_container_image,
         llvm = llvm,
         java_version = java_version,
         gcc_version = gcc_version,
