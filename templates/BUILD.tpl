@@ -23,6 +23,21 @@ alias(
 platform(
     name = "platform_linux",
     constraint_values = [
+        "@platforms//cpu:%{platform_local_arch_target}",
+        "@platforms//os:linux",
+        "@bazel_tools//tools/cpp:gcc",
+    ],
+    exec_properties = {
+        "OSFamily": "Linux",
+        "Arch": "%{default_arch}",
+        "container-image": "%{default_container_image}",
+        "dockerNetwork": "%{default_docker_network}",
+    },
+)
+
+platform(
+    name = "platform_linux_x86_64",
+    constraint_values = [
         "@platforms//cpu:x86_64",
         "@platforms//os:linux",
         "@bazel_tools//tools/cpp:gcc",
@@ -43,6 +58,7 @@ platform(
     ],
     exec_properties = {
         "OSFamily": "Linux",
+        "Arch": "arm64",
         "container-image": "%{default_container_image}",
         "dockerNetwork": "%{default_docker_network}",
     },
