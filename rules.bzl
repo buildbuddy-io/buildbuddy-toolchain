@@ -41,7 +41,7 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{default_container_image}": default_container_image,
         "%{default_docker_network}": "off",
         "%{default_platform}": default_platform,
-        "%{default_arch}": "arm64" if rctx.os.arch == "aarch64" else "x86_64",
+        "%{default_arch_exec_property}": "\"Arch\": \"arm64\"," if rctx.os.arch == "aarch64" else "",
         "%{platform_local_arch_target}": "aarch64" if rctx.os.arch == "aarch64" else "x86_64",
         "%{java_version}": rctx.attr.java_version or default_tool_versions["java"],
         # Handle removal of JDK8_JVM_OPTS in bazel 6.0.0:
