@@ -166,7 +166,7 @@ def _default_tool_versions(container_image):
         return {"java": "11", "gcc": "9"}
 
     if _is_same_image(container_image, UBUNTU22_04_ARM64_IMAGE):
-        return {"java": "11", "gcc": "9"}
+        return {"java": "11", "gcc": "11"}
 
     return {"java": "8", "gcc": "5"}
 
