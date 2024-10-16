@@ -128,7 +128,7 @@ UBUNTU20_04_IMAGE = ":".join([UBUNTU20_04_REPOSITORY, "latest"])
 
 UBUNTU22_04_REPOSITORY = "gcr.io/flame-public/rbe-ubuntu22-04"
 UBUNTU22_04_IMAGE = ":".join([UBUNTU22_04_REPOSITORY, "latest"])
-UBUNTU22_04_ARM64_IMAGE = ":".join([UBUNTU22_04_REPOSITORY, ":latest-arm64"])
+UBUNTU22_04_ARM64_IMAGE = ":".join([UBUNTU22_04_REPOSITORY, "latest-arm64"])
 
 def buildbuddy(
         name,
