@@ -120,11 +120,15 @@ _buildbuddy_toolchain = repository_rule(
 # Specifying an empty container_image value means "use the default image."
 DEFAULT_IMAGE = ""
 
-UBUNTU16_04_IMAGE = "gcr.io/flame-public/executor-docker-default:enterprise-v1.6.0"
+UBUNTU16_04_REPOSITORY = "gcr.io/flame-public/executor-docker-default"
+UBUNTU16_04_IMAGE = ":" .join([UBUNTU16_04_REPOSITORY, "enterprise-v1.6.0"])
 
-UBUNTU20_04_IMAGE = "gcr.io/flame-public/rbe-ubuntu20-04:latest"
+UBUNTU20_04_REPOSITORY = "gcr.io/flame-public/rbe-ubuntu20-04"
+UBUNTU20_04_IMAGE = ":".join([UBUNTU20_04_REPOSITORY, "latest"])
 
-UBUNTU22_04_ARM64_IMAGE = "gcr.io/flame-public/rbe-ubuntu22-04:latest-arm64"
+UBUNTU22_04_REPOSITORY = "gcr.io/flame-public/rbe-ubuntu22-04"
+UBUNTU22_04_IMAGE = ":".join([UBUNTU22_04_REPOSITORY, "latest"])
+UBUNTU22_04_ARM64_IMAGE = ":".join([UBUNTU22_04_REPOSITORY, ":latest-arm64"])
 
 def buildbuddy(
         name,
@@ -162,20 +166,20 @@ Please visit https://www.buildbuddy.io/docs/rbe-setup#java-toolchain for the rec
     )
 
 def _default_tool_versions(container_image):
-    if _is_same_image(container_image, UBUNTU20_04_IMAGE):
+    if _is_same_repository(container_image, UBUNTU20_04_REPOSITORY):
         return {"java": "11", "gcc": "9"}
 
-    if _is_same_image(container_image, UBUNTU22_04_ARM64_IMAGE):
+    if _is_same_repository(container_image, UBUNTU22_04_REPOSITORY):
         return {"java": "11", "gcc": "11"}
 
     return {"java": "8", "gcc": "5"}
 
-def _is_same_image(a, b):
-    """Returns whether two images are the same, NOT including tag or digest."""
-    image_a, _, _ = _split_image(a)
-    image_b, _, _ = _split_image(b)
+def _is_same_repository(a, b):
+    """Returns whether two repositories are the same (stripping tag or digest if necessary)."""
+    repo_a, _, _ = _split_image(a)
+    repo_b, _, _ = _split_image(b)
 
-    return image_a == image_b
+    return repo_a == repo_b
 
 def _split_image(image):
     if image.startswith("docker://"):
