@@ -18,10 +18,7 @@ def _buildbuddy_toolchain_impl(rctx):
 
     default_container_image = _container_image_prop(rctx.attr.container_image)
     if default_container_image == None or default_container_image == "":
-        if rctx.os.arch == "aarch64":
-            default_container_image = _container_image_prop(UBUNTU22_04_IMAGE)
-        else:
-            default_container_image = _container_image_prop(UBUNTU20_04_IMAGE)
+        default_container_image = _container_image_prop(UBUNTU22_04_IMAGE)
 
     default_tool_versions = _default_tool_versions(default_container_image)
 
