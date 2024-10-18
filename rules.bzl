@@ -16,6 +16,12 @@ def _buildbuddy_toolchain_impl(rctx):
     else:
         default_platform = "platform_linux"
 
+    default_container_image = _container_image_prop(rctx.attr.container_image)
+    if default_container_image == None or default_container_image == "":
+        default_container_image = _container_image_prop(UBUNTU22_04_IMAGE)
+
+    default_tool_versions = _default_tool_versions(default_container_image)
+
     substitutions = {
         "%{toolchain_path_prefix}": toolchain_path_prefix,
         "%{tools_path_prefix}": "",
@@ -24,14 +30,19 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{sysroot_prefix}": "",
         "%{sysroot_label}": "",
         "%{makevars_ld_flags}": "-fuse-ld=lld",
+        "%{linux_gnu_include_dirname}": "aarch64-linux-gnu" if rctx.os.arch == "aarch64" else "x86_64-linux-gnu",
         "%{k8_additional_cxx_builtin_include_directories}": "",
         "%{default_cc_toolchain_suite}": "@local_config_cc//:toolchain" if rctx.os.name == "mac os x" else ":ubuntu_cc_toolchain_suite",
         "%{default_cc_toolchain}": ":ubuntu_cc_toolchain",
-        "%{gcc_version}": rctx.attr.gcc_version,
-        "%{default_container_image}": rctx.attr.container_image,
+        "%{gcc_version}": rctx.attr.gcc_version or default_tool_versions["gcc"],
+        "%{default_container_image}": default_container_image,
+        "%{default_x86_64_container_image}": default_container_image,
+        "%{default_arm64_container_image}": default_container_image,
         "%{default_docker_network}": "off",
         "%{default_platform}": default_platform,
-        "%{java_version}": rctx.attr.java_version,
+        "%{default_arch_exec_property}": "\"Arch\": \"arm64\"," if rctx.os.arch == "aarch64" else "",
+        "%{platform_local_arch_target}": "aarch64" if rctx.os.arch == "aarch64" else "x86_64",
+        "%{java_version}": rctx.attr.java_version or default_tool_versions["java"],
         # Handle removal of JDK8_JVM_OPTS in bazel 6.0.0:
         # https://github.com/bazelbuild/bazel/commit/3a0a4f3b6931fbb6303fc98eec63d4434d8aece4
         "%{jvm_opts_import}": '"JDK8_JVM_OPTS",' if native.bazel_version and native.bazel_version < "6.0.0" and rctx.attr.java_version == "8" else "",
@@ -98,13 +109,18 @@ _buildbuddy_toolchain = repository_rule(
 # Specifying an empty container_image value means "use the default image."
 DEFAULT_IMAGE = ""
 
-UBUNTU16_04_IMAGE = "gcr.io/flame-public/executor-docker-default:enterprise-v1.6.0"
+UBUNTU16_04_REPOSITORY = "gcr.io/flame-public/executor-docker-default"
+UBUNTU16_04_IMAGE = ":" .join([UBUNTU16_04_REPOSITORY, "enterprise-v1.6.0"])
 
-UBUNTU20_04_IMAGE = "gcr.io/flame-public/rbe-ubuntu20-04:latest"
+UBUNTU20_04_REPOSITORY = "gcr.io/flame-public/rbe-ubuntu20-04"
+UBUNTU20_04_IMAGE = ":".join([UBUNTU20_04_REPOSITORY, "latest"])
+
+UBUNTU22_04_REPOSITORY = "gcr.io/flame-public/rbe-ubuntu22-04"
+UBUNTU22_04_IMAGE = ":".join([UBUNTU22_04_REPOSITORY, "latest"])
 
 def buildbuddy(
         name,
-        container_image = UBUNTU20_04_IMAGE,
+        container_image = None,
         llvm = False,
         java_version = "",
         gcc_version = "",
@@ -119,14 +135,12 @@ def buildbuddy(
 WARNING: java_version support in buildbuddy-toolchain is deprecated and will be removed in a future release.
 Please visit https://www.buildbuddy.io/docs/rbe-setup#java-toolchain for the recommended Java toolchain setup.""")
 
-    default_tool_versions = _default_tool_versions(container_image)
-
     _buildbuddy_toolchain(
         name = name,
-        container_image = _container_image_prop(container_image),
+        container_image = container_image,
         llvm = llvm,
-        java_version = java_version or default_tool_versions["java"],
-        gcc_version = gcc_version or default_tool_versions["gcc"],
+        java_version = java_version,
+        gcc_version = gcc_version,
         msvc_edition = msvc_edition,
         msvc_release = msvc_release,
         msvc_version = msvc_version,
@@ -136,17 +150,20 @@ Please visit https://www.buildbuddy.io/docs/rbe-setup#java-toolchain for the rec
     )
 
 def _default_tool_versions(container_image):
-    if _is_same_image(container_image, UBUNTU20_04_IMAGE):
+    if _is_same_repository(container_image, UBUNTU20_04_REPOSITORY):
         return {"java": "11", "gcc": "9"}
+
+    if _is_same_repository(container_image, UBUNTU22_04_REPOSITORY):
+        return {"java": "11", "gcc": "11"}
 
     return {"java": "8", "gcc": "5"}
 
-def _is_same_image(a, b):
-    """Returns whether two images are the same, NOT including tag or digest."""
-    image_a, _, _ = _split_image(a)
-    image_b, _, _ = _split_image(b)
+def _is_same_repository(a, b):
+    """Returns whether two repositories are the same (stripping tag or digest if necessary)."""
+    repo_a, _, _ = _split_image(a)
+    repo_b, _, _ = _split_image(b)
 
-    return image_a == image_b
+    return repo_a == repo_b
 
 def _split_image(image):
     if image.startswith("docker://"):
@@ -162,7 +179,7 @@ def _split_image(image):
     return image, tag, digest
 
 def _container_image_prop(image):
-    if image == "" or image == "none":
+    if image == None or image == "" or image == "none":
         return image
     if not image.startswith("docker://"):
         return "docker://" + image
