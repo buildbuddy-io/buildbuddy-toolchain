@@ -16,6 +16,7 @@ def _buildbuddy_toolchain_impl(rctx):
     else:
         default_platform = "platform_linux"
 
+    default_container_image = _container_image_prop(rctx.attr.container_image)
     if default_container_image == None or default_container_image == "":
         if rctx.os.arch == "aarch64":
             default_container_image = UBUNTU22_04_IMAGE
