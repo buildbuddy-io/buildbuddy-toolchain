@@ -23,13 +23,13 @@ alias(
 platform(
     name = "platform_linux",
     constraint_values = [
-        "@platforms//cpu:%{default_arch}",
+        "@platforms//cpu:%{default_arch_constraint}",
         "@platforms//os:linux",
         "@bazel_tools//tools/cpp:gcc",
     ],
     exec_properties = {
         "OSFamily": "Linux",
-        "Arch": "%{default_arch}",
+        "Arch": "%{default_arch_exec_property}",
         "container-image": "%{default_container_image}",
         "dockerNetwork": "%{default_docker_network}",
     },
