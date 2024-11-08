@@ -27,7 +27,6 @@ def _ext_impl(mctx):
         if platform_tag.buildbuddy_container_image and platform_tag.container_image:
             fail("buildbuddy.platform.container_image and buildbuddy.platform.buildbuddy_container_image cannot be specified together")
         if platform_tag.buildbuddy_container_image:
-            image = ""
             if platform_tag.buildbuddy_container_image == "DEFAULT_IMAGE":
                 image = DEFAULT_IMAGE
             elif platform_tag.buildbuddy_container_image == "UBUNTU16_04_IMAGE":
@@ -38,13 +37,11 @@ def _ext_impl(mctx):
                 image = UBUNTU22_04_IMAGE
             else:
                 fail("Unknown buildbuddy.platform.buildbuddy_container_image value: %s" % platform_tag.buildbuddy_container_image)
-            macro_args |= {
-                "container_image": image,
-            }
-        if platform_tag.container_image:
-            macro_args |= {
-                "container_image": platform_tag.container_image,
-            }
+        else:
+            image = platform_tag.container_image
+        macro_args |= {
+            "container_image": image,
+        }
     if gcc_toolchain_tag:
         macro_args |= {
             "gcc_major_version": gcc_toolchain_tag.gcc_major_version,
