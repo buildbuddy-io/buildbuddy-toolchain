@@ -1,4 +1,3 @@
-# A bzlmod example will be provided separately
 common --enable_bzlmod
 common --lockfile_mode=update
 
