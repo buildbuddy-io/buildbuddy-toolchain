@@ -7,6 +7,7 @@ local_path_override(
 )
 
 buildbuddy = use_extension("@buildbuddy//:extensions.bzl", "buildbuddy")
+buildbuddy.platform(buildbuddy_container_image = "UBUNTU20_04_IMAGE")
 
 # Example customizations (optional):
 #

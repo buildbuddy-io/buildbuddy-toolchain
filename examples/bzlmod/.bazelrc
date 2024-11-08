@@ -22,7 +22,7 @@ common:remote --remote_executor=grpcs://remote.buildbuddy.io
 #   $ bazel build --config=remote-linux //...
 #
 common:remote-linux --config=remote
-common:remote-linux --platforms=@buildbuddy_toolchain//:platform_linux
+common:remote-linux --platforms=@buildbuddy_toolchain//:platform_linux_x86_64
 # Register "execution platforms" and "cc toolchains" using Bazel flag.
 #
 # These could also be defined statically in WORKSPACE files
@@ -35,7 +35,7 @@ common:remote-linux --platforms=@buildbuddy_toolchain//:platform_linux
 # References:
 #   - https://bazel.build/rules/lib/globals/workspace#register_execution_platforms
 #   - https://bazel.build/rules/lib/globals/workspace#register_toolchains
-common:remote-linux --extra_execution_platforms=@buildbuddy_toolchain//:platform_linux
+common:remote-linux --extra_execution_platforms=@buildbuddy_toolchain//:platform_linux_x86_64
 common:remote-linux --extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain
 
 # Target Linux platform when build remotely

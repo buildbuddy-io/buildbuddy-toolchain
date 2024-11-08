@@ -1,4 +1,4 @@
-load("//:rules.bzl", bb_macro = "buildbuddy")
+load("//:rules.bzl", "DEFAULT_IMAGE", "UBUNTU16_04_IMAGE", "UBUNTU20_04_IMAGE", "UBUNTU22_04_IMAGE", bb_macro = "buildbuddy")
 
 def _ext_impl(mctx):
     found_root_module = False
@@ -24,9 +24,27 @@ def _ext_impl(mctx):
 
     macro_args = dict()
     if platform_tag:
-        macro_args |= {
-            "container_image": platform_tag.container_image,
-        }
+        if platform_tag.buildbuddy_container_image and platform_tag.container_image:
+            fail("buildbuddy.platform.container_image and buildbuddy.platform.buildbuddy_container_image cannot be specified together")
+        if platform_tag.buildbuddy_container_image:
+            image = ""
+            if platform_tag.buildbuddy_container_image == "DEFAULT_IMAGE":
+                image = DEFAULT_IMAGE
+            elif platform_tag.buildbuddy_container_image == "UBUNTU16_04_IMAGE":
+                image = UBUNTU16_04_IMAGE
+            elif platform_tag.buildbuddy_container_image == "UBUNTU20_04_IMAGE":
+                image = UBUNTU20_04_IMAGE
+            elif platform_tag.buildbuddy_container_image == "UBUNTU22_04_IMAGE":
+                image = UBUNTU22_04_IMAGE
+            else:
+                fail("Unknown buildbuddy.platform.buildbuddy_container_image value: %s" % platform_tag.buildbuddy_container_image)
+            macro_args |= {
+                "container_image": image,
+            }
+        if platform_tag.container_image:
+            macro_args |= {
+                "container_image": platform_tag.container_image,
+            }
     if gcc_toolchain_tag:
         macro_args |= {
             "gcc_major_version": gcc_toolchain_tag.gcc_major_version,
@@ -66,7 +84,17 @@ buildbuddy = module_extension(
         ),
         "platform": tag_class(
             attrs = {
-                "container_image": attr.string(default = ""),
+                # Only one of these can be specified
+                "container_image": attr.string(doc = "custom container image to use as execution sandbox"),
+                "buildbuddy_container_image": attr.string(
+                    values = [
+                        "DEFAULT_IMAGE",
+                        "UBUNTU16_04_IMAGE",
+                        "UBUNTU20_04_IMAGE",
+                        "UBUNTU22_04_IMAGE"
+                    ],
+                    doc = "buildbuddy's pre-built container image to use as execution sandbox",
+                ),
             },
         ),
     },
