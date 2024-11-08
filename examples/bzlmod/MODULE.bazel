@@ -8,7 +8,7 @@ local_path_override(
 
 buildbuddy = use_extension("@buildbuddy//:extensions.bzl", "buildbuddy")
 
-# Example customizations:
+# Example customizations (optional):
 #
 # buildbuddy.platform(container_image = "docker://my-container.image/replace/me@sha256:1234567890abcdef")
 # buildbuddy.gcc_toolchain(
