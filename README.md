@@ -4,6 +4,8 @@ Currently supports Linux C/C++ (including CGO) & Java builds on Ubuntu 16.04 or 
 
 ## Usage instructions
 
+For the most up-to-date instructions, see our [Official Documentation](https://buildbuddy.io/docs/rbe-setup).
+
 #### BzlMod
 
 Add the following to your `MODULE.bazel` file:
@@ -19,7 +21,7 @@ buildbuddy = use_extension("@buildbuddy//:extensions.bzl", "buildbuddy")
 use_repo(buildbuddy, "buildbuddy_toolchain")
 ```
 
-For a more detailed example and customization options, see our [example bzlmod workspace](https://github.com/buildbuddy-io/buildbuddy-toolchain/tree/master/examples/bzlmod).
+For a more detailed example and customization options, see our [BzlMod Example](https://github.com/buildbuddy-io/buildbuddy-toolchain/tree/master/examples/bzlmod).
 
 #### WORKSPACE
 
@@ -47,10 +49,9 @@ Now you can use the toolchain in your BuildBuddy RBE builds. For example:
 ```
 bazel build server \
     --remote_executor=remote.buildbuddy.io \
-    --extra_execution_platforms=@buildbuddy_toolchain//:platform \
-    --host_platform=@buildbuddy_toolchain//:platform \
-    --platforms=@buildbuddy_toolchain//:platform \
-    --crosstool_top=@buildbuddy_toolchain//:toolchain
+    --extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain \
+    --extra_execution_platforms=@buildbuddy_toolchain//:platform_linux_x86_64 \
+    --platforms=@buildbuddy_toolchain//:platform_linux_x86_64
 ```
 
 ## Java support
