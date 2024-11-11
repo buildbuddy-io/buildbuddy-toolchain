@@ -1,11 +1,14 @@
 module(name = "example")
 
+# "@toolchains_buildbuddy" is the module in the Bazel registry
 bazel_dep(name = "toolchains_buildbuddy")
 local_path_override(
     module_name = "toolchains_buildbuddy",
     path = "../../",
 )
 
+# The module provides an extension named "buildbuddy".
+# The extension creates a repository named "@buildbuddy_toolchain".
 buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbuddy")
 
 # Example customizations (all optional):
