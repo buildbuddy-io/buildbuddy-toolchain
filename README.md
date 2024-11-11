@@ -4,6 +4,25 @@ Currently supports Linux C/C++ (including CGO) & Java builds on Ubuntu 16.04 or 
 
 ## Usage instructions
 
+#### BzlMod
+
+Add the following to your `MODULE.bazel` file:
+
+```python
+bazel_dep(name = "buildbuddy_toolchain", repo_name = "buildbuddy")
+archive_override(
+    module_name = "buildbuddy_toolchain",
+    ...
+)
+
+buildbuddy = use_extension("@buildbuddy//:extensions.bzl", "buildbuddy")
+use_repo(buildbuddy, "buildbuddy_toolchain")
+```
+
+For a more detailed example and customization options, see our [example bzlmod workspace](https://github.com/buildbuddy-io/buildbuddy-toolchain/tree/master/examples/bzlmod).
+
+#### WORKSPACE
+
 Add the following lines to your `WORKSPACE` file. You'll probably want to pin your version to a specific commit rather than master.
 
 ```python

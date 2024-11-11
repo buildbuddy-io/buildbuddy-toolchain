@@ -1,8 +1,24 @@
 module(
-    name = "buildbuddy_toolchain",
-    version = "0.0.0",
+    name = "toolchains_buildbuddy",
+    version = "0.0.1",
     repo_name = "io_buildbuddy_buildbuddy_toolchain",
 )
 
 bazel_dep(name = "rules_cc", version = "0.0.9")
 bazel_dep(name = "platforms", version = "0.0.10")
+
+buildbuddy = use_extension("//:extensions.bzl", "buildbuddy")
+use_repo(buildbuddy, "buildbuddy_toolchain")
+
+register_toolchains(
+    "@buildbuddy_toolchain//:ubuntu_cc_toolchain",
+    "@buildbuddy_toolchain//:windows_msvc_cc_toolchain",
+)
+
+register_execution_platforms(
+    "@buildbuddy_toolchain//:platform_linux_x86_64",
+    "@buildbuddy_toolchain//:platform_linux_arm64",
+    "@buildbuddy_toolchain//:platform_darwin",
+    "@buildbuddy_toolchain//:platform_darwin_arm64",
+    "@buildbuddy_toolchain//:platform_windows",
+)
