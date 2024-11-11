@@ -27,7 +27,7 @@ common:remote-linux --platforms=@buildbuddy_toolchain//:platform_linux_x86_64
 
 ## Register "execution platforms" and "cc toolchains" using Bazel flag.
 #
-# Relevant toolchains and execution platforms are registered automatically inside @buildbuddy_toolchain//:MODULE.bazel file.
+# Relevant toolchains and execution platforms are registered automatically inside "toolchains_buildbuddy" module's MODULE.bazel file.
 # User could also register custom toolchains and execution platforms in their MODULE.bazel file using
 # `register_execution_platforms` and `register_toolchains` global starlark functions. These will take precedence over
 # the default ones.
