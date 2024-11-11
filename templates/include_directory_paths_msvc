@@ -1,2 +1,2 @@
-"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\include"
-"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\VS\\include"
+"C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Tools\\MSVC\\%{msvc_version}\\include"
+"C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Auxiliary\\VS\\include"
