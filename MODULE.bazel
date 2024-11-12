@@ -11,14 +11,14 @@ buildbuddy = use_extension("//:extensions.bzl", "buildbuddy")
 use_repo(buildbuddy, "buildbuddy_toolchain")
 
 register_toolchains(
-    "@buildbuddy_toolchain//:ubuntu_cc_toolchain",
-    "@buildbuddy_toolchain//:windows_msvc_cc_toolchain",
+    "//toolchains/cc:ubuntu_gcc",
+    "//toolchains/cc:windows_msvc",
 )
 
 register_execution_platforms(
-    "@buildbuddy_toolchain//:platform_linux_x86_64",
-    "@buildbuddy_toolchain//:platform_linux_arm64",
-    "@buildbuddy_toolchain//:platform_darwin",
-    "@buildbuddy_toolchain//:platform_darwin_arm64",
-    "@buildbuddy_toolchain//:platform_windows",
+    "//platforms:linux_x86_64",
+    "//platforms:linux_arm64",
+    "//platforms:darwin_x86_64",
+    "//platforms:darwin_arm64",
+    "//platforms:windows_x86_64",
 )
