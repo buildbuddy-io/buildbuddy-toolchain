@@ -11,15 +11,14 @@ For the most up-to-date instructions, see our [Official Documentation](https://b
 Add the following to your `MODULE.bazel` file:
 
 ```python
-bazel_dep(name = "buildbuddy_toolchain", repo_name = "buildbuddy")
-archive_override(
-    module_name = "buildbuddy_toolchain",
-    ...
-)
+bazel_dep(name = "toolchains_buildbuddy")
 
 buildbuddy = use_extension("@buildbuddy//:extensions.bzl", "buildbuddy")
+
 use_repo(buildbuddy, "buildbuddy_toolchain")
 ```
+
+The execution platforms and CC toolchains should be registered automatically under BzlMod.
 
 For a more detailed example and customization options, see our [BzlMod Example](https://github.com/buildbuddy-io/buildbuddy-toolchain/tree/master/examples/bzlmod).
 

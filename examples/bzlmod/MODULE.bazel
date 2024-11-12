@@ -36,6 +36,10 @@ buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbudd
 
 # All relevant toolchain and platform targets should be available under "@buildbuddy_toolchain//..." repository
 #
-# For convenience, the platform and toolchain targets are also "alias" in the module under
-# "@toolchains_buildbuddy//platforms:all" and "@toolchains_buildbuddy//toolchains/cc:all" packages.
+# For convenience, the platform and toolchain targets are also "alias"ed under these packages inside the module:
+#   - @toolchains_buildbuddy//platforms/
+#   - @toolchains_buildbuddy//toolchains/cc/
+#
+# User SHOULD prefer using these "@toolchains_buildbuddy//" Module's targets, over the repository targets
+# to avoid any breaking changes in the future.
 use_repo(buildbuddy, "buildbuddy_toolchain")
