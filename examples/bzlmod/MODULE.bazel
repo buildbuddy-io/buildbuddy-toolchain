@@ -1,12 +1,15 @@
 module(name = "example")
 
-bazel_dep(name = "buildbuddy_toolchain", repo_name = "buildbuddy")
+# "@toolchains_buildbuddy" is the module in the Bazel registry
+bazel_dep(name = "toolchains_buildbuddy")
 local_path_override(
-    module_name = "buildbuddy_toolchain",
+    module_name = "toolchains_buildbuddy",
     path = "../../",
 )
 
-buildbuddy = use_extension("@buildbuddy//:extensions.bzl", "buildbuddy")
+# The module provides an extension named "buildbuddy".
+# The extension creates a repository named "@buildbuddy_toolchain".
+buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbuddy")
 
 # Example customizations (all optional):
 #
@@ -32,4 +35,13 @@ buildbuddy = use_extension("@buildbuddy//:extensions.bzl", "buildbuddy")
 #     )
 
 # All relevant toolchain and platform targets should be available under "@buildbuddy_toolchain//..." repository
-use_repo(buildbuddy, "buildbuddy_toolchain")
+#
+# For convenience, the platform and toolchain targets are also "alias"ed under these packages inside the module:
+#   - @toolchains_buildbuddy//platforms/
+#   - @toolchains_buildbuddy//toolchains/cc/
+#
+# User SHOULD prefer using these "@toolchains_buildbuddy//" Module's targets, over the repository targets
+# to avoid any breaking changes in the future.
+#
+# (Optional) Use the repository directly instead.
+# use_repo(buildbuddy, "buildbuddy_toolchain")

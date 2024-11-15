@@ -158,9 +158,26 @@ toolchain(
     name = "ubuntu_cc_toolchain",
     exec_compatible_with = [
         "@bazel_tools//tools/cpp:gcc",
+        "@platforms//cpu:x86_64",
         "@platforms//os:linux",
     ],
     target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    toolchain = ":ubuntu_local_cc_toolchain",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+)
+
+toolchain(
+    name = "ubuntu_cc_toolchain_arm64",
+    exec_compatible_with = [
+        "@bazel_tools//tools/cpp:gcc",
+        "@platforms//cpu:aarch64",
+        "@platforms//os:linux",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:aarch64",
         "@platforms//os:linux",
     ],
     toolchain = ":ubuntu_local_cc_toolchain",
