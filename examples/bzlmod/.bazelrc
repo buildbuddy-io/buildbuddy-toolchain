@@ -36,7 +36,7 @@ common:remote-linux --platforms=@toolchains_buildbuddy//platforms:linux_x86_64
 # toolchains and execution platforms. Examples:
 #
 #   common:remote-linux --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_x86_64
-#   common:remote-linux --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc
+#   common:remote-linux --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64
 #
 # Use flag `--toolchain_resolution_debug=cpp` to troubleshoot Bazel's toolchain
 # resolution and selection.
