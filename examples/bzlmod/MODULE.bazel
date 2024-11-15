@@ -42,4 +42,6 @@ buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbudd
 #
 # User SHOULD prefer using these "@toolchains_buildbuddy//" Module's targets, over the repository targets
 # to avoid any breaking changes in the future.
-use_repo(buildbuddy, "buildbuddy_toolchain")
+#
+# (Optional) Use the repository directly instead.
+# use_repo(buildbuddy, "buildbuddy_toolchain")

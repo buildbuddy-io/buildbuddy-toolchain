@@ -13,9 +13,8 @@ Add the following to your `MODULE.bazel` file:
 ```python
 bazel_dep(name = "toolchains_buildbuddy")
 
+# Use the extension to create toolchain and platform targets
 buildbuddy = use_extension("@buildbuddy//:extensions.bzl", "buildbuddy")
-
-use_repo(buildbuddy, "buildbuddy_toolchain")
 ```
 
 The execution platforms and CC toolchains should be registered automatically under BzlMod.
