@@ -36,8 +36,8 @@ common:remote --remote_executor=grpcs://remote.buildbuddy.io
 #
 # References:
 #   - https://bazel.build/external/migration#register-toolchains
-#   - https://bazel.build/rules/lib/globals/workspace#register_execution_platforms
-#   - https://bazel.build/rules/lib/globals/workspace#register_toolchains
+#   - https://bazel.build/rules/lib/globals/module#register_execution_platforms
+#   - https://bazel.build/rules/lib/globals/module#register_toolchains
 
 
 ## Target Linux platform when build remotely
