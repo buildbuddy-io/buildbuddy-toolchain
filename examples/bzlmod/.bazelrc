@@ -15,25 +15,18 @@ common:remote --remote_timeout=3600
 common:remote --remote_executor=grpcs://remote.buildbuddy.io
 
 
-## Target Linux platform when build remotely
-#
-# Usage:
-#
-#   $ bazel build --config=remote-linux //...
-#
-common:remote-linux --config=remote
-common:remote-linux --platforms=@toolchains_buildbuddy//platforms:linux_x86_64
-
-
 ## Register "execution platforms" and "cc toolchains" using Bazel flag.
 #
-# Relevant toolchains and execution platforms are registered automatically inside "toolchains_buildbuddy" module's MODULE.bazel file.
-# User could also register custom toolchains and execution platforms in their MODULE.bazel file using
-# `register_execution_platforms` and `register_toolchains` global starlark functions. These will take precedence over
-# the default ones.
+# Relevant toolchains are registered automatically inside "toolchains_buildbuddy" module's MODULE.bazel file.
+# Note that execution platforms are NOT registered automatically.
 #
-# The flags `--extra_execution_platforms` and `--extra_toolchains` are used to override the staticcally registered 
-# toolchains and execution platforms. Examples:
+# User can register custom toolchains and execution platforms in their MODULE.bazel file using
+# `register_execution_platforms` and `register_toolchains` global starlark functions.
+# These will take precedence over the default ones.
+#
+# The flags `--extra_execution_platforms` and `--extra_toolchains` are used to override the staticcally
+# registered toolchains and execution platforms.
+# For example:
 #
 #   common:remote-linux --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_x86_64
 #   common:remote-linux --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64
@@ -43,8 +36,19 @@ common:remote-linux --platforms=@toolchains_buildbuddy//platforms:linux_x86_64
 #
 # References:
 #   - https://bazel.build/external/migration#register-toolchains
-#   - https://bazel.build/rules/lib/globals/workspace#register_execution_platforms
-#   - https://bazel.build/rules/lib/globals/workspace#register_toolchains
+#   - https://bazel.build/rules/lib/globals/module#register_execution_platforms
+#   - https://bazel.build/rules/lib/globals/module#register_toolchains
+
+
+## Target Linux platform when build remotely
+#
+# Usage:
+#
+#   $ bazel build --config=remote-linux //...
+#
+common:remote-linux --config=remote
+common:remote-linux --platforms=@toolchains_buildbuddy//platforms:linux_x86_64
+common:remote-linux --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_x86_64
 
 
 ## Target Windows platform when build remotely
@@ -55,6 +59,7 @@ common:remote-linux --platforms=@toolchains_buildbuddy//platforms:linux_x86_64
 #
 common:remote-windows --config=remote
 common:remote-windows --platforms=@toolchains_buildbuddy//platforms:windows_x86_64
+common:remote-windows --extra_execution_platforms=@toolchains_buildbuddy//platforms:windows_x86_64
 
 
 # Separate file to keep API Key that should have the follow flag
