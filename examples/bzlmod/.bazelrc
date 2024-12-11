@@ -50,6 +50,9 @@ common:remote-linux --config=remote
 common:remote-linux --platforms=@toolchains_buildbuddy//platforms:linux_x86_64
 common:remote-linux --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_x86_64
 
+common:remote-linux-arm64 --config=remote
+common:remote-linux-arm64 --platforms=@toolchains_buildbuddy//platforms:linux_arm64
+common:remote-linux-arm64 --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_arm64
 
 ## Target Windows platform when build remotely
 #
