@@ -5,7 +5,7 @@ alias(
 
 alias(
     name = "ubuntu_gcc_arm64",
-    actual = "@buildbuddy_toolchain//:ubuntu_cc_toolchain"
+    actual = "@buildbuddy_toolchain//:ubuntu_cc_toolchain_arm64"
 )
 
 alias(
