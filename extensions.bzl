@@ -41,6 +41,7 @@ def _ext_impl(mctx):
             image = platform_tag.container_image
         macro_args |= {
             "container_image": image,
+            "nonroot_workspace": platform_tag.nonroot_workspace,
         }
     if gcc_toolchain_tag:
         macro_args |= {
@@ -91,6 +92,10 @@ buildbuddy = module_extension(
                         "UBUNTU22_04_IMAGE"
                     ],
                     doc = "buildbuddy's pre-built container image to use as execution sandbox",
+                ),
+                "nonroot_workspace": attr.bool(
+                    doc = "flag to toggle workspace permissions when running the container image with a non-root user",
+                    default = True,
                 ),
             },
         ),

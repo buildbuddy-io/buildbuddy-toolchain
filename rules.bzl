@@ -20,6 +20,8 @@ def _buildbuddy_toolchain_impl(rctx):
     if default_container_image == None or default_container_image == "":
         default_container_image = _container_image_prop(UBUNTU22_04_IMAGE)
 
+    nonroot_workspace = str(rctx.attr.nonroot_workspace).lower()
+
     default_tool_versions = _default_tool_versions(default_container_image)
 
     substitutions = {
@@ -37,6 +39,7 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{default_container_image}": default_container_image,
         "%{default_x86_64_container_image}": default_container_image,
         "%{default_arm64_container_image}": default_container_image,
+        "%{nonroot_workspace}": nonroot_workspace,
         "%{default_docker_network}": "off",
         "%{default_platform}": default_platform,
         "%{default_arch_constraint}": "aarch64" if rctx.os.arch == "aarch64" else "x86_64",
@@ -92,6 +95,7 @@ _buildbuddy_toolchain = repository_rule(
     attrs = {
         "llvm": attr.bool(),
         "container_image": attr.string(),
+        "nonroot_workspace": attr.bool(),
         "java_version": attr.string(),
         "gcc_version": attr.string(),
         "msvc_edition": attr.string(values = ["Community", "Professional", "Enterprise"]),
@@ -120,6 +124,7 @@ UBUNTU22_04_IMAGE = ":".join([UBUNTU22_04_REPOSITORY, "latest"])
 def buildbuddy(
         name,
         container_image = None,
+        nonroot_workspace = True,
         llvm = False,
         java_version = "",
         gcc_version = "",
@@ -137,6 +142,7 @@ Please visit https://www.buildbuddy.io/docs/rbe-setup#java-toolchain for the rec
     _buildbuddy_toolchain(
         name = name,
         container_image = container_image,
+        nonroot_workspace = nonroot_workspace,
         llvm = llvm,
         java_version = java_version,
         gcc_version = gcc_version,

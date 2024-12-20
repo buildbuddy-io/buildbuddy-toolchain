@@ -31,6 +31,7 @@ platform(
         "OSFamily": "Linux",
         "Arch": "%{default_arch_exec_property}",
         "container-image": "%{default_container_image}",
+        "nonroot-workspace": "%{nonroot_workspace}",
         "dockerNetwork": "%{default_docker_network}",
     },
 )
@@ -46,6 +47,7 @@ platform(
         "OSFamily": "Linux",
         "Arch": "amd64",
         "container-image": "%{default_x86_64_container_image}",
+        "nonroot-workspace": "%{nonroot_workspace}",
         "dockerNetwork": "%{default_docker_network}",
     },
 )
@@ -61,6 +63,7 @@ platform(
         "OSFamily": "Linux",
         "Arch": "arm64",
         "container-image": "%{default_arm64_container_image}",
+        "nonroot-workspace": "%{nonroot_workspace}",
         "dockerNetwork": "%{default_docker_network}",
     },
 )
