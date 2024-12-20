@@ -21,7 +21,7 @@ buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbudd
 #
 # Customizing GCC Toolchain(Linux) Definitions:
 #     buildbuddy.gcc_toolchain(
-#         gcc_major_version = "11",
+#         gcc_version = "11",
 #         extra_cxx_builtin_include_directories = ["/some/include/dir"],
 #     )
 #

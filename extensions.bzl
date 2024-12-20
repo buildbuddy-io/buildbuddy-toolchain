@@ -44,7 +44,7 @@ def _ext_impl(mctx):
         }
     if gcc_toolchain_tag:
         macro_args |= {
-            "gcc_major_version": gcc_toolchain_tag.gcc_major_version,
+            "gcc_version": gcc_toolchain_tag.gcc_version,
             "extra_cxx_builtin_include_directories": gcc_toolchain_tag.extra_cxx_builtin_include_directories,
         }
     if msvc_toolchain_tag:
@@ -66,7 +66,7 @@ buildbuddy = module_extension(
     tag_classes = {
         "gcc_toolchain": tag_class(
             attrs = {
-                "gcc_major_version": attr.string(),
+                "gcc_version": attr.string(),
                 "extra_cxx_builtin_include_directories": attr.string_list(),
             },
         ),
