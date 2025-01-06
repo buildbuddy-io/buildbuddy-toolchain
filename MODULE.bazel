@@ -4,7 +4,7 @@ module(
     repo_name = "io_buildbuddy_buildbuddy_toolchain",
 )
 
-bazel_dep(name = "rules_cc", version = "0.1.0")
+bazel_dep(name = "rules_cc", version = "0.0.17")
 bazel_dep(name = "platforms", version = "0.0.10")
 
 buildbuddy = use_extension("//:extensions.bzl", "buildbuddy")
