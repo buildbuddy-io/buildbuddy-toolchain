@@ -64,13 +64,13 @@ def _buildbuddy_toolchain_impl(rctx):
         substitutions,
     )
     rctx.template(
-        "include_directory_paths_msvc",
-        Label("//templates:include_directory_paths_msvc"),
+        "gcc_config.bzl",
+        Label("//templates:gcc_config.bzl.tpl"),
         substitutions,
     )
     rctx.template(
-        "include_directory_paths_gcc",
-        Label("//templates:include_directory_paths_gcc"),
+        "msvc_config.bzl",
+        Label("//templates:msvc_config.bzl.tpl"),
         substitutions,
     )
     rctx.symlink(
