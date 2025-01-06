@@ -63,6 +63,16 @@ def _buildbuddy_toolchain_impl(rctx):
         Label("//templates:BUILD.tpl"),
         substitutions,
     )
+    rctx.template(
+        "include_directory_paths_msvc",
+        Label("//templates:include_directory_paths_msvc"),
+        substitutions,
+    )
+    rctx.template(
+        "include_directory_paths_gcc",
+        Label("//templates:include_directory_paths_gcc"),
+        substitutions,
+    )
     rctx.symlink(
         Label("//templates:cc_toolchain_config.bzl"),
         "cc_toolchain_config.bzl",
@@ -70,10 +80,6 @@ def _buildbuddy_toolchain_impl(rctx):
     rctx.symlink(
         Label("//templates:windows_cc_toolchain_config.bzl"),
         "windows_cc_toolchain_config.bzl",
-    )
-    rctx.symlink(
-        Label("//templates:include_directory_paths_msvc"),
-        "include_directory_paths_msvc",
     )
 
     if not rctx.os.name.lower().startswith("windows"):

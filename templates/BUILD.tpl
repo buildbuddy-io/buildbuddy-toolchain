@@ -143,7 +143,7 @@ filegroup(
 
 filegroup(
     name = "compiler_deps",
-    srcs = glob(["extra_tools/**"], allow_empty = True),
+    srcs = glob(["extra_tools/**"], allow_empty = True) + [":include_directory_paths_gcc"],
 )
 
 cc_toolchain_suite(
@@ -210,17 +210,18 @@ cc_toolchain_config(
     abi_version = "local",
     abi_libc_version = "local",
     cxx_builtin_include_directories = [
+        # Keep this list in sync with "templates/include_directory_paths_gcc"
         "/usr/include",
+        "/usr/include/aarch64-linux-gnu",
+        "/usr/include/aarch64-linux-gnu/c++/%{gcc_version}",
         "/usr/include/c++/%{gcc_version}",
         "/usr/include/c++/%{gcc_version}/backward",
         "/usr/include/x86_64-linux-gnu",
         "/usr/include/x86_64-linux-gnu/c++/%{gcc_version}",
-        "/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include",
-        "/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include-fixed",
-        "/usr/include/aarch64-linux-gnu",
-        "/usr/include/aarch64-linux-gnu/c++/%{gcc_version}",
         "/usr/lib/gcc/aarch64-linux-gnu/%{gcc_version}/include",
         "/usr/lib/gcc/aarch64-linux-gnu/%{gcc_version}/include-fixed",
+        "/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include",
+        "/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include-fixed",
         "/usr/local/include",
         %{extra_cxx_builtin_include_directories}
     ],
@@ -327,6 +328,7 @@ windows_cc_toolchain_config(
     msvc_link_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/link.exe",
     msvc_lib_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/lib.exe",
     cxx_builtin_include_directories = [
+        # Keep this list in sync with "templates/include_directory_paths_msvc"
         "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\cppwinrt",
         "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\shared",
         "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\um",

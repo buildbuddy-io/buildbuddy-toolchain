@@ -1,0 +1,20 @@
+# GENERATED FILE. DO NOT EDIT.
+#
+# This file is not expected to be used by any of the CC actions but is used to ensure that
+# these paths are used as part of the Action's cache key calculation.
+#
+# Keep in sync with the include directory paths in the GCC toolchain config.
+
+"/usr/include"
+"/usr/include/aarch64-linux-gnu"
+"/usr/include/aarch64-linux-gnu/c++/%{gcc_version}"
+"/usr/include/c++/%{gcc_version}"
+"/usr/include/c++/%{gcc_version}/backward"
+"/usr/include/x86_64-linux-gnu"
+"/usr/include/x86_64-linux-gnu/c++/%{gcc_version}"
+"/usr/lib/gcc/aarch64-linux-gnu/%{gcc_version}/include"
+"/usr/lib/gcc/aarch64-linux-gnu/%{gcc_version}/include-fixed"
+"/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include"
+"/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include-fixed"
+"/usr/local/include"
+%{extra_cxx_builtin_include_directories}
