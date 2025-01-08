@@ -1,5 +1,7 @@
 # In real repo, this should be replaced with like this
 #
+#   load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+#
 #   http_archive(
 #       name = "io_buildbuddy_buildbuddy_toolchain",
 #       sha256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", # replace with actual value
