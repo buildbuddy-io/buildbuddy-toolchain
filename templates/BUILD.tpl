@@ -5,6 +5,8 @@ load(
     "java_runtime_files",
 )
 load("@rules_cc//cc:defs.bzl", "cc_toolchain", "cc_toolchain_suite")
+load(":gcc_config.bzl", "GCC_BUILTIN_INCLUDE_PATHS")
+load(":msvc_config.bzl", "MSVC_BUILTIN_INCLUDE_PATHS")
 load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 load(":windows_cc_toolchain_config.bzl", windows_cc_toolchain_config = "cc_toolchain_config")
 
@@ -143,7 +145,11 @@ filegroup(
 
 filegroup(
     name = "compiler_deps",
-    srcs = glob(["extra_tools/**"], allow_empty = True),
+    srcs = [
+        # This file is not expected to be used by any of the CC actions but is used to ensure that
+        # these paths are part of the Action's cache key calculation.
+        ":gcc_config.bzl",
+    ],
 )
 
 cc_toolchain_suite(
@@ -209,21 +215,7 @@ cc_toolchain_config(
     target_libc = "local",
     abi_version = "local",
     abi_libc_version = "local",
-    cxx_builtin_include_directories = [
-        "/usr/include",
-        "/usr/include/c++/%{gcc_version}",
-        "/usr/include/c++/%{gcc_version}/backward",
-        "/usr/include/x86_64-linux-gnu",
-        "/usr/include/x86_64-linux-gnu/c++/%{gcc_version}",
-        "/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include",
-        "/usr/lib/gcc/x86_64-linux-gnu/%{gcc_version}/include-fixed",
-        "/usr/include/aarch64-linux-gnu",
-        "/usr/include/aarch64-linux-gnu/c++/%{gcc_version}",
-        "/usr/lib/gcc/aarch64-linux-gnu/%{gcc_version}/include",
-        "/usr/lib/gcc/aarch64-linux-gnu/%{gcc_version}/include-fixed",
-        "/usr/local/include",
-        %{extra_cxx_builtin_include_directories}
-    ],
+    cxx_builtin_include_directories = GCC_BUILTIN_INCLUDE_PATHS,
     tool_paths = {
         "ar": "/usr/bin/ar",
         "ld": "/usr/bin/ld",
@@ -281,7 +273,11 @@ cc_toolchain_config(
 
 filegroup(
     name = "msvc_compiler_files",
-    srcs = [":include_directory_paths_msvc"],
+    srcs = [
+        # This file is not expected to be used by any of the CC actions but is used to ensure that
+        # these paths are part of the Action's cache key calculation.
+        ":msvc_config.bzl",
+    ],
 )
 
 windows_cc_toolchain_config(
@@ -326,15 +322,7 @@ windows_cc_toolchain_config(
     msvc_ml_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/ml64.exe",
     msvc_link_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/link.exe",
     msvc_lib_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/lib.exe",
-    cxx_builtin_include_directories = [
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\cppwinrt",
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\shared",
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\um",
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\winrt",
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\ucrt",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Auxiliary\\VS\\include",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Tools\\MSVC\\%{msvc_version}\\include",
-    ],
+    cxx_builtin_include_directories = MSVC_BUILTIN_INCLUDE_PATHS,
     tool_paths = {
         "ar": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/lib.exe",
         "ml": "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/ml64.exe",
