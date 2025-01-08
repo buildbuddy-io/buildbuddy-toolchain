@@ -44,7 +44,7 @@ def _ext_impl(mctx):
         }
     if gcc_toolchain_tag:
         macro_args |= {
-            "gcc_major_version": gcc_toolchain_tag.gcc_major_version,
+            "gcc_version": gcc_toolchain_tag.gcc_major_version,
             "extra_cxx_builtin_include_directories": gcc_toolchain_tag.extra_cxx_builtin_include_directories,
         }
     if msvc_toolchain_tag:
