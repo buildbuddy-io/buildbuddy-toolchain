@@ -76,8 +76,8 @@ platform(
     ],
     exec_properties = {
         "OSFamily": "Darwin",
-        "container-image": "none",
-        "dockerNetwork": "%{default_docker_network}",
+        "Arch": "amd64",
+        "use-self-hosted-executors": "true",
     },
 )
 
@@ -91,8 +91,7 @@ platform(
     exec_properties = {
         "OSFamily": "Darwin",
         "Arch": "arm64",
-        "container-image": "none",
-        "dockerNetwork": "%{default_docker_network}",
+        "use-self-hosted-executors": "true",
     },
 )
 
@@ -105,6 +104,7 @@ platform(
     ],
     exec_properties = {
         "OSFamily": "Windows",
+        "use-self-hosted-executors": "true",
     },
 )
 
