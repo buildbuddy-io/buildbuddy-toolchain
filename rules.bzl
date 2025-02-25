@@ -13,8 +13,13 @@ def _buildbuddy_toolchain_impl(rctx):
             default_platform = "platform_darwin_arm64"
         else:
             default_platform = "platform_darwin"
+    elif rctx.os.name == "windows":
+        default_platform = "platform_windows"
     else:
-        default_platform = "platform_linux"
+        if rctx.os.arch == "aarch64":
+            default_platform = "platform_linux_arm64"
+        else:
+            default_platform = "platform_linux_x86_64"
 
     default_container_image = _container_image_prop(rctx.attr.container_image)
     if default_container_image == None or default_container_image == "":
