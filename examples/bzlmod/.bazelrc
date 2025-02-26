@@ -54,6 +54,13 @@ common:remote-linux-arm64 --config=remote
 common:remote-linux-arm64 --platforms=@toolchains_buildbuddy//platforms:linux_arm64
 common:remote-linux-arm64 --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_arm64
 
+## Using custom Linux platform
+# 
+# This helps verify that user can extend our platform definitions via inheritence.
+common:custom-linux --config=remote
+common:custom-linux --platforms=//:my_linux_platform
+common:custom-linux --extra_execution_platforms=//:my_linux_platform
+
 ## Target Windows platform when build remotely
 #
 # Usage:
