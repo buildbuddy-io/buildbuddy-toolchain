@@ -1,3 +1,5 @@
+package(default_visibility = ["//visibility:public"])
+
 # Host compatible platform is automatically selected based on the
 # host machine that runs Bazel. This platform should has the same
 # constraint values as @local_config_platform//:host but also has
