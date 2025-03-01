@@ -52,22 +52,6 @@ bazel build server \
     --platforms=@buildbuddy_toolchain//:platform_linux_x86_64
 ```
 
-## Java support
-
-Bazel provides support for Java toolchains out of the box.
-You can enabled the Java toolchain with the following flags:
-
-```
---java_language_version=17
---tool_java_language_version=17
---java_runtime_version=remotejdk_17
---tool_java_runtime_version=remotejdk_17
-```
-
-Available verions are listed in [Bazel's User Manual](https://bazel.build/docs/user-manual#java-language-version)
-
-If you need a custom Java toolchain, see Bazel's docs on [Java toolchain configuration](https://bazel.build/docs/bazel-and-java#config-java-toolchains).
-
 ## Linux image variants
 
 The following Linux images are available for remote execution:
@@ -85,7 +69,6 @@ buildbuddy(name = "buildbuddy_toolchain", container_image = UBUNTU16_04_IMAGE)
 
 This image includes the following build tools:
 
-- Java 8 (javac 1.8.0_242)
 - GCC 5.4.0
 - GLIBC 2.23
 - Clang/LLVM 11.0.0
@@ -105,7 +88,6 @@ buildbuddy(name = "buildbuddy_toolchain", container_image = UBUNTU20_04_IMAGE)
 
 This image includes the following build tools:
 
-- Java 11.0.17
 - GCC 9.4.0
 - GLIBC 2.31
 - Clang/LLVM 15.0.0

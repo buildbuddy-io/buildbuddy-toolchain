@@ -46,11 +46,6 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{default_platform}": default_platform,
         "%{default_arch_constraint}": "aarch64" if rctx.os.arch == "aarch64" else "x86_64",
         "%{default_arch_exec_property}": "arm64" if rctx.os.arch == "aarch64" else "amd64",
-        "%{java_version}": rctx.attr.java_version or default_tool_versions["java"],
-        # Handle removal of JDK8_JVM_OPTS in bazel 6.0.0:
-        # https://github.com/bazelbuild/bazel/commit/3a0a4f3b6931fbb6303fc98eec63d4434d8aece4
-        "%{jvm_opts_import}": '"JDK8_JVM_OPTS",' if native.bazel_version and native.bazel_version < "6.0.0" and rctx.attr.java_version == "8" else "",
-        "%{jvm_opts}": "JDK8_JVM_OPTS" if native.bazel_version and native.bazel_version < "6.0.0" and rctx.attr.java_version == "8" else '["-Xbootclasspath/p:$(location @remote_java_tools//:javac_jar)"]',
         "%{msvc_edition}": rctx.attr.msvc_edition,
         "%{msvc_release}": rctx.attr.msvc_release,
         "%{msvc_version}": rctx.attr.msvc_version,
@@ -103,7 +98,6 @@ _buildbuddy_toolchain = repository_rule(
     attrs = {
         "llvm": attr.bool(),
         "container_image": attr.string(),
-        "java_version": attr.string(),
         "gcc_version": attr.string(),
         "msvc_edition": attr.string(values = ["Community", "Professional", "Enterprise"]),
         "msvc_release": attr.string(),
@@ -132,7 +126,6 @@ def buildbuddy(
         name,
         container_image = None,
         llvm = False,
-        java_version = "",
         gcc_version = "",
         msvc_edition = "Community",
         msvc_release = "2022",
@@ -140,16 +133,10 @@ def buildbuddy(
         windows_kits_release = "10",
         windows_kits_version = "10.0.22621.0",
         extra_cxx_builtin_include_directories = []):
-    if java_version != "":
-        print("""
-WARNING: java_version support in buildbuddy-toolchain is deprecated and will be removed in a future release.
-Please visit https://www.buildbuddy.io/docs/rbe-setup#java-toolchain for the recommended Java toolchain setup.""")
-
     _buildbuddy_toolchain(
         name = name,
         container_image = container_image,
         llvm = llvm,
-        java_version = java_version,
         gcc_version = gcc_version,
         msvc_edition = msvc_edition,
         msvc_release = msvc_release,
@@ -161,12 +148,12 @@ Please visit https://www.buildbuddy.io/docs/rbe-setup#java-toolchain for the rec
 
 def _default_tool_versions(container_image):
     if _is_same_repository(container_image, UBUNTU20_04_REPOSITORY):
-        return {"java": "11", "gcc": "9"}
+        return {"gcc": "9"}
 
     if _is_same_repository(container_image, UBUNTU22_04_REPOSITORY):
-        return {"java": "11", "gcc": "11"}
+        return {"gcc": "11"}
 
-    return {"java": "8", "gcc": "5"}
+    return {"gcc": "5"}
 
 def _is_same_repository(a, b):
     """Returns whether two repositories are the same (stripping tag or digest if necessary)."""

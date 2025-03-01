@@ -1,9 +1,3 @@
-load(
-    "@bazel_tools//tools/jdk:default_java_toolchain.bzl",
-    %{jvm_opts_import}
-    "default_java_toolchain",
-    "java_runtime_files",
-)
 load("@rules_cc//cc:defs.bzl", "cc_toolchain", "cc_toolchain_suite")
 load(":gcc_config.bzl", "GCC_BUILTIN_INCLUDE_PATHS")
 load(":msvc_config.bzl", "MSVC_BUILTIN_INCLUDE_PATHS")
@@ -106,21 +100,6 @@ platform(
     exec_properties = {
         "OSFamily": "Windows",
     },
-)
-
-## Java %{java_version}
-
-java_runtime(
-    name = "javabase",
-    srcs = [],
-    java_home = "/usr/lib/jvm/java-%{java_version}-openjdk-amd64",
-)
-
-default_java_toolchain(
-    name = "java_toolchain",
-    jvm_opts = %{jvm_opts},
-    source_version = "%{java_version}",
-    target_version = "%{java_version}",
 )
 
 ## Defaults
