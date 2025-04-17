@@ -118,7 +118,7 @@ This image includes the following build tools:
 To use Ubuntu 22.04, import the toolchain as follows:
 
 ```python
-load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy", "UBUNTU20_04_IMAGE")
+load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy", "UBUNTU22_04_IMAGE")
 
 buildbuddy(name = "buildbuddy_toolchain", container_image = UBUNTU22_04_IMAGE)
 ```
@@ -128,6 +128,22 @@ This image includes the following build tools:
 - GCC 11.4.0
 - GLIBC 2.35
 - Python 3.10.12
+
+### Ubuntu 22.04 image
+
+To use Ubuntu 22.04, import the toolchain as follows:
+
+```python
+load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy", "UBUNTU24_04_IMAGE")
+
+buildbuddy(name = "buildbuddy_toolchain", container_image = UBUNTU24_04_IMAGE)
+```
+
+This image includes the following build tools:
+
+- GCC 13.3.0
+- GLIBC 2.39
+- Python 3.12.3
 
 ## Networking
 

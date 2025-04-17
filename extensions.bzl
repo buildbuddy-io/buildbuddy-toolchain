@@ -1,4 +1,4 @@
-load("//:rules.bzl", "DEFAULT_IMAGE", "UBUNTU16_04_IMAGE", "UBUNTU20_04_IMAGE", "UBUNTU22_04_IMAGE", bb_macro = "buildbuddy")
+load("//:rules.bzl", "DEFAULT_IMAGE", "UBUNTU16_04_IMAGE", "UBUNTU20_04_IMAGE", "UBUNTU22_04_IMAGE", "UBUNTU24_04_IMAGE", bb_macro = "buildbuddy")
 
 def _ext_impl(mctx):
     found_root_module = False
@@ -35,6 +35,8 @@ def _ext_impl(mctx):
                 image = UBUNTU20_04_IMAGE
             elif platform_tag.buildbuddy_container_image == "UBUNTU22_04_IMAGE":
                 image = UBUNTU22_04_IMAGE
+            elif platform_tag.buildbuddy_container_image == "UBUNTU24_04_IMAGE":
+                image = UBUNTU24_04_IMAGE
             else:
                 fail("Unknown buildbuddy.platform.buildbuddy_container_image value: %s" % platform_tag.buildbuddy_container_image)
         else:
@@ -58,7 +60,7 @@ def _ext_impl(mctx):
 
     bb_macro(
         name = "buildbuddy_toolchain",
-        **macro_args,
+        **macro_args
     )
 
 buildbuddy = module_extension(
@@ -88,7 +90,8 @@ buildbuddy = module_extension(
                         "DEFAULT_IMAGE",
                         "UBUNTU16_04_IMAGE",
                         "UBUNTU20_04_IMAGE",
-                        "UBUNTU22_04_IMAGE"
+                        "UBUNTU22_04_IMAGE",
+                        "UBUNTU24_04_IMAGE",
                     ],
                     doc = "buildbuddy's pre-built container image to use as execution sandbox",
                 ),
