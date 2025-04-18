@@ -1,7 +1,3 @@
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
-load("@rules_cc//cc:defs.bzl", _cc_toolchain = "cc_toolchain")
-
 def _buildbuddy_toolchain_impl(rctx):
     repo_path = str(rctx.path(""))
     relative_path_prefix = "external/%s/" % rctx.name
@@ -15,11 +11,10 @@ def _buildbuddy_toolchain_impl(rctx):
             default_platform = "platform_darwin"
     elif rctx.os.name == "windows":
         default_platform = "platform_windows"
+    elif rctx.os.arch == "aarch64":
+        default_platform = "platform_linux_arm64"
     else:
-        if rctx.os.arch == "aarch64":
-            default_platform = "platform_linux_arm64"
-        else:
-            default_platform = "platform_linux_x86_64"
+        default_platform = "platform_linux_x86_64"
 
     default_container_image = _container_image_prop(rctx.attr.container_image)
     if default_container_image == None or default_container_image == "":
@@ -120,13 +115,16 @@ _buildbuddy_toolchain = repository_rule(
 DEFAULT_IMAGE = ""
 
 UBUNTU16_04_REPOSITORY = "gcr.io/flame-public/executor-docker-default"
-UBUNTU16_04_IMAGE = ":" .join([UBUNTU16_04_REPOSITORY, "enterprise-v1.6.0"])
+UBUNTU16_04_IMAGE = ":".join([UBUNTU16_04_REPOSITORY, "enterprise-v1.6.0"])
 
 UBUNTU20_04_REPOSITORY = "gcr.io/flame-public/rbe-ubuntu20-04"
 UBUNTU20_04_IMAGE = ":".join([UBUNTU20_04_REPOSITORY, "latest"])
 
 UBUNTU22_04_REPOSITORY = "gcr.io/flame-public/rbe-ubuntu22-04"
 UBUNTU22_04_IMAGE = ":".join([UBUNTU22_04_REPOSITORY, "latest"])
+
+UBUNTU24_04_REPOSITORY = "gcr.io/flame-public/rbe-ubuntu24-04"
+UBUNTU24_04_IMAGE = ":".join([UBUNTU24_04_REPOSITORY, "latest"])
 
 def buildbuddy(
         name,
@@ -165,6 +163,9 @@ def _default_tool_versions(container_image):
 
     if _is_same_repository(container_image, UBUNTU22_04_REPOSITORY):
         return {"java": "11", "gcc": "11"}
+
+    if _is_same_repository(container_image, UBUNTU24_04_REPOSITORY):
+        return {"java": "11", "gcc": "13"}
 
     return {"java": "8", "gcc": "5"}
 
