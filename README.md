@@ -28,9 +28,9 @@ Add the following lines to your `WORKSPACE` file. You'll probably want to pin yo
 ```python
 http_archive(
     name = "io_buildbuddy_buildbuddy_toolchain",
-    sha256 = "e899f235b36cb901b678bd6f55c1229df23fcbc7921ac7a3585d29bff2bf9cfd",
-    strip_prefix = "buildbuddy-toolchain-fd351ca8f152d66fc97f9d98009e0ae000854e8f",
-    urls = ["https://github.com/buildbuddy-io/buildbuddy-toolchain/archive/fd351ca8f152d66fc97f9d98009e0ae000854e8f.tar.gz"],
+    sha256 = "62ab60d07205f98c4fc3735bb21630272490fce193c59c3bb2cb2b962176400c",
+    strip_prefix = "buildbuddy-toolchain-0c575cc56a0c5ed69a6dfb544a3f794b9d1b474d",
+    urls = ["https://github.com/buildbuddy-io/buildbuddy-toolchain/archive/0c575cc56a0c5ed69a6dfb544a3f794b9d1b474d.tar.gz"],
 )
 
 load("@io_buildbuddy_buildbuddy_toolchain//:deps.bzl", "buildbuddy_deps")
@@ -129,9 +129,9 @@ This image includes the following build tools:
 - GLIBC 2.35
 - Python 3.10.12
 
-### Ubuntu 22.04 image
+### Ubuntu 24.04 image
 
-To use Ubuntu 22.04, import the toolchain as follows:
+To use Ubuntu 24.04, import the toolchain as follows:
 
 ```python
 load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy", "UBUNTU24_04_IMAGE")
