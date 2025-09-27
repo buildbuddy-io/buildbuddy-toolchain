@@ -1,11 +1,9 @@
 common --enable_bzlmod
 common --lockfile_mode=update
 
-
 # Use a minimal set of environment variables for action execution to improve
 # build hermeticity and remote cache hits.
 common --incompatible_strict_action_env
-
 
 # Enable BuildBuddy build event service
 common --bes_results_url=https://app.buildbuddy.io/invocation/
@@ -13,7 +11,6 @@ common --bes_backend=grpcs://remote.buildbuddy.io
 # Enable BuildBuddy Remote Execution
 common:remote --remote_timeout=3600
 common:remote --remote_executor=grpcs://remote.buildbuddy.io
-
 
 ## Register "execution platforms" and "cc toolchains" using Bazel flag.
 #
@@ -25,7 +22,9 @@ common:remote --remote_executor=grpcs://remote.buildbuddy.io
 # These will take precedence over the default ones.
 #
 # The flags `--extra_execution_platforms` and `--extra_toolchains` are used to override the staticcally
-# registered toolchains and execution platforms.
+# registered toolchains and execution platforms. This is recommended as other Bazel Modules (i.e. rules_cc)
+# may register their cc toolchains earlier and take default priority.
+#
 # For example:
 #
 #   common:remote-linux --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_x86_64
@@ -39,7 +38,6 @@ common:remote --remote_executor=grpcs://remote.buildbuddy.io
 #   - https://bazel.build/rules/lib/globals/module#register_execution_platforms
 #   - https://bazel.build/rules/lib/globals/module#register_toolchains
 
-
 ## Target Linux platform when build remotely
 #
 # Usage:
@@ -49,17 +47,22 @@ common:remote --remote_executor=grpcs://remote.buildbuddy.io
 common:remote-linux --config=remote
 common:remote-linux --platforms=@toolchains_buildbuddy//platforms:linux_x86_64
 common:remote-linux --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_x86_64
+# (Optional) Explicitly tell Bazel to use this toolchain
+# common:remote-linux --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64
 
 common:remote-linux-arm64 --config=remote
 common:remote-linux-arm64 --platforms=@toolchains_buildbuddy//platforms:linux_arm64
 common:remote-linux-arm64 --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_arm64
+# (Optional) Explicitly tell Bazel to use this toolchain
+# common:remote-linux --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_arm64
 
 ## Using custom Linux platform
-# 
+#
 # This helps verify that user can extend our platform definitions via inheritence.
 common:custom-linux --config=remote
 common:custom-linux --platforms=//:my_linux_platform
 common:custom-linux --extra_execution_platforms=//:my_linux_platform
+common:remote-linux --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64
 
 ## Target Windows platform when build remotely
 #
@@ -70,7 +73,8 @@ common:custom-linux --extra_execution_platforms=//:my_linux_platform
 common:remote-windows --config=remote
 common:remote-windows --platforms=@toolchains_buildbuddy//platforms:windows_x86_64
 common:remote-windows --extra_execution_platforms=@toolchains_buildbuddy//platforms:windows_x86_64
-
+# (Optional) Explicitly tell Bazel to use this toolchain
+# common:remote-linux --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:windows_msvc_x86_64
 
 # Separate file to keep API Key that should have the follow flag
 #

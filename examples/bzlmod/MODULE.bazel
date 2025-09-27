@@ -47,8 +47,8 @@ buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbudd
 #
 # (Optional) Use the repository directly instead.
 #     use_repo(buildbuddy, "buildbuddy_toolchain")
-#
-# (Optional) Register the toolchains.
-#     register_toolchains(
-#         "@toolchains_buildbuddy//toolchains/cc:all",
-#     )
+
+# Register the toolchains explicitly
+register_toolchains(
+    "@toolchains_buildbuddy//toolchains/cc:all",
+)
