@@ -2,7 +2,6 @@ module(name = "example")
 
 bazel_dep(name = "rules_cc", version = "0.2.8")
 
-# "@toolchains_buildbuddy" is the module in the Bazel registry
 bazel_dep(name = "toolchains_buildbuddy")
 local_path_override(
     module_name = "toolchains_buildbuddy",
@@ -10,7 +9,7 @@ local_path_override(
 )
 
 # The module provides an extension named "buildbuddy".
-# The extension creates a repository named "@buildbuddy_toolchain".
+# The extension creates a repository named "@toolchains_buildbuddy".
 buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbuddy")
 register_toolchains(
     "@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64",
