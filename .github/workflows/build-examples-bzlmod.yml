@@ -19,9 +19,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Bazelisk
-        uses: bazelbuild/setup-bazelisk@v3
-
       - name: Build example target
         run: bazel build //:main
         working-directory: examples/bzlmod
