@@ -15,7 +15,6 @@ jobs:
         include:
           - name: linux-amd64
             os: ubuntu-latest
-            shell: bash
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,4 +25,4 @@ jobs:
       - name: Build example target
         run: bazel build //:main
         working-directory: examples/bzlmod
-        shell: ${{ matrix.shell }}
+        shell: bash
