@@ -1,4 +1,4 @@
-name: Build bzlmod example
+name: Build examples/bzlmod
 
 on:
   push:
