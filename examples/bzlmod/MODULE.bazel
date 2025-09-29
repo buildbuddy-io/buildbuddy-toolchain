@@ -12,6 +12,9 @@ local_path_override(
 # The module provides an extension named "buildbuddy".
 # The extension creates a repository named "@buildbuddy_toolchain".
 buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbuddy")
+register_toolchains(
+    "@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64",
+)
 
 # Example customizations (all optional):
 #
