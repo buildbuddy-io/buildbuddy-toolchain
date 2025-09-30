@@ -62,7 +62,7 @@ common:remote-linux-arm64 --extra_execution_platforms=@toolchains_buildbuddy//pl
 common:custom-linux --config=remote
 common:custom-linux --platforms=//:my_linux_platform
 common:custom-linux --extra_execution_platforms=//:my_linux_platform
-common:remote-linux --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64
+# common:custom-linux --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64
 
 ## Target Windows platform when build remotely
 #
