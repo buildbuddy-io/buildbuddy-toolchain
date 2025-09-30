@@ -11,5 +11,8 @@ buildbuddy = use_extension("//:extensions.bzl", "buildbuddy")
 use_repo(buildbuddy, "buildbuddy_toolchain")
 
 register_toolchains(
-    "//toolchains/cc:all",
+    # Do not use :all because aliases are not picked up by wildcard registration
+    "//toolchains/cc:ubuntu_gcc_x86_64",
+    "//toolchains/cc:ubuntu_gcc_arm64",
+    "//toolchains/cc:windows_msvc_x86_64",
 )
