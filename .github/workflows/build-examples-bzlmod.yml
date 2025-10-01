@@ -7,25 +7,48 @@ on:
 
 jobs:
   build:
-    name: ${{ matrix.name }}
+    name: ${{ matrix.host }}-${{ matrix.target }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: linux-x86_64
-            os: ubuntu-24.04
-          - name: macos-arm64
-            os: macos-15
-          - name: macos-x86_64
-            os: macos-15-intel
-          - name: windows-x86_64
-            os: windows-2022
+          # Local builds
+          - {host: linux-x86_64, target: local, os: ubuntu-24.04}
+          - {host: macos-arm64, target: local, os: macos-15}
+          - {host: macos-x86_64, target: local, os: macos-15-intel}
+          - {host: windows-x86_64, target: local, os: windows-2022}
+          # RBE builds
+          - {host: linux-x86_64, target: rbe-linux-x86_64, os: ubuntu-24.04, rbe_platform: linux_x86_64, rbe_toolchain: ubuntu_gcc_x86_64}
+          - {host: linux-x86_64, target: rbe-linux-arm64, os: ubuntu-24.04, rbe_platform: linux_arm64, rbe_toolchain: ubuntu_gcc_arm64}
+          - {host: macos-x86_64, target: rbe-linux-x86_64, os: macos-15-intel, rbe_platform: linux_x86_64, rbe_toolchain: ubuntu_gcc_x86_64}
+          - {host: macos-x86_64, target: rbe-linux-arm64, os: macos-15-intel, rbe_platform: linux_arm64, rbe_toolchain: ubuntu_gcc_arm64}
+          - {host: macos-arm64, target: rbe-linux-x86_64, os: macos-15, rbe_platform: linux_x86_64, rbe_toolchain: ubuntu_gcc_x86_64}
+          - {host: macos-arm64, target: rbe-linux-arm64, os: macos-15, rbe_platform: linux_arm64, rbe_toolchain: ubuntu_gcc_arm64}
+          # TODO(dan): RBE builds on Windows
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build example target
-        run: bazel build //:main
+      - name: Build example target (local)
+        if: matrix.target == 'local'
+        run: bazel build //:main --noremote_accept_cached --noremote_upload_local_results
+        working-directory: examples/bzlmod
+        shell: bash
+
+      - name: Build example target (RBE)
+        if: matrix.target != 'local'
+        env:
+          BUILDBUDDY_API_KEY: ${{ secrets.BUILDBUDDY_API_KEY }}
+        run: |
+          bazel build //:main \
+            --noremote_accept_cached \
+            --noremote_upload_local_results \
+            --config=remote-linux \
+            --remote_header="x-buildbuddy-api-key=$BUILDBUDDY_API_KEY" \
+            --experimental_platform_in_output_dir \
+            --platforms=@toolchains_buildbuddy//platforms:${{ matrix.rbe_platform }} \
+            --extra_execution_platforms=@toolchains_buildbuddy//platforms:${{ matrix.rbe_platform }} \
+            --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:${{ matrix.rbe_toolchain }}
         working-directory: examples/bzlmod
         shell: bash
