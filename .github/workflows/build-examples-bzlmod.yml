@@ -28,12 +28,12 @@ jobs:
           - name: local-linux-x86_64-rbe-linux-x86_64
             os: ubuntu-24.04
             command: >-
-              bazel build //:main
-                --noremote_accept_cached
-                --noremote_upload_local_results
-                --config=remote-linux
-                --remote_header="x-buildbuddy-api-key=$BUILDBUDDY_API_KEY"
-                --experimental_platform_in_output_dir
+              bazel build //:main \
+                --noremote_accept_cached \
+                --noremote_upload_local_results \
+                --config=remote-linux \
+                --remote_header="x-buildbuddy-api-key=$BUILDBUDDY_API_KEY" \
+                --experimental_platform_in_output_dir \
                 --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64
     steps:
       - name: Checkout repository
