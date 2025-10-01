@@ -62,7 +62,8 @@ jobs:
                 --remote_local_fallback=false \
                 --strategy=CppCompile=remote \
                 --incompatible_enable_cc_toolchain_resolution \
-                --host_platform=@toolchains_buildbuddy//platforms:linux_x86_64
+                --host_platform=@toolchains_buildbuddy//platforms:linux_x86_64 \
+                --toolchain_resolution_debug=cpp
           - name: local-windows-x86_64-rbe-linux-arm64
             os: windows-2022
             command: >-
@@ -78,7 +79,8 @@ jobs:
                 --remote_local_fallback=false \
                 --strategy=CppCompile=remote \
                 --incompatible_enable_cc_toolchain_resolution \
-                --host_platform=@toolchains_buildbuddy//platforms:linux_x86_64
+                --host_platform=@toolchains_buildbuddy//platforms:linux_x86_64 \
+                --toolchain_resolution_debug=cpp
           - name: local-macos-x86_64-rbe-linux-x86_64
             os: macos-15-intel
             command: >-
