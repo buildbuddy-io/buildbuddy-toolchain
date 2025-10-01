@@ -13,19 +13,30 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: linux-x86_64
+          - name: local-linux-x86_64
             os: ubuntu-24.04
-          - name: macos-arm64
+            command: bazel build //:main
+          - name: local-macos-arm64
             os: macos-15
-          - name: macos-x86_64
+            command: bazel build //:main
+          - name: local-macos-x86_64
             os: macos-15-intel
-          - name: windows-x86_64
+            command: bazel build //:main
+          - name: local-windows-x86_64
             os: windows-2022
+            command: bazel build //:main
+          - name: local-linux-x86_64-rbe-linux-x86_64
+            os: ubuntu-24.04
+            command: >-
+              bazel build //:main --config=remote-linux --remote_header="x-buildbuddy-api-key=$BUILDBUDDY_API_KEY"
+              --experimental_platform_in_output_dir --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Build example target
-        run: bazel build //:main
+        env:
+          BUILDBUDDY_API_KEY: ${{ secrets.BUILDBUDDY_API_KEY }}
+        run: ${{ matrix.command }}
         working-directory: examples/bzlmod
         shell: bash
