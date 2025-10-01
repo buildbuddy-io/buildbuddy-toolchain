@@ -56,8 +56,11 @@ jobs:
                 --config=remote-linux \
                 --remote_header="x-buildbuddy-api-key=$BUILDBUDDY_API_KEY" \
                 --experimental_platform_in_output_dir \
+                --platforms=@toolchains_buildbuddy//platforms:linux_x86_64 \
+                --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_x86_64 \
                 --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64 \
-                --repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+                --remote_local_fallback=false \
+                --strategy=CppCompile=remote
           - name: local-windows-x86_64-rbe-linux-arm64
             os: windows-2022
             command: >-
@@ -70,7 +73,8 @@ jobs:
                 --platforms=@toolchains_buildbuddy//platforms:linux_arm64 \
                 --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_arm64 \
                 --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_arm64 \
-                --repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+                --remote_local_fallback=false \
+                --strategy=CppCompile=remote
           - name: local-macos-x86_64-rbe-linux-x86_64
             os: macos-15-intel
             command: >-
