@@ -11,6 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
+      # TODO(dan): RBE builds on Windows
       matrix:
         include:
           - name: local-linux-x86_64
@@ -47,42 +48,6 @@ jobs:
                 --platforms=@toolchains_buildbuddy//platforms:linux_arm64 \
                 --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_arm64 \
                 --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_arm64
-          - name: local-windows-x86_64-rbe-linux-x86_64
-            os: windows-2022
-            command: >-
-              bazel build //:main \
-                --noremote_accept_cached \
-                --noremote_upload_local_results \
-                --config=remote-linux \
-                --remote_header="x-buildbuddy-api-key=$BUILDBUDDY_API_KEY" \
-                --experimental_platform_in_output_dir \
-                --platforms=@toolchains_buildbuddy//platforms:linux_x86_64 \
-                --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_x86_64 \
-                --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64 \
-                --remote_local_fallback=false \
-                --strategy=CppCompile=remote \
-                --incompatible_enable_cc_toolchain_resolution \
-                --host_platform=@toolchains_buildbuddy//platforms:linux_x86_64 \
-                --toolchain_resolution_debug=cpp \
-                --toolchain_resolution_override=@bazel_tools//tools/cpp:toolchain_type=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64
-          - name: local-windows-x86_64-rbe-linux-arm64
-            os: windows-2022
-            command: >-
-              bazel build //:main \
-                --noremote_accept_cached \
-                --noremote_upload_local_results \
-                --config=remote-linux \
-                --remote_header="x-buildbuddy-api-key=$BUILDBUDDY_API_KEY" \
-                --experimental_platform_in_output_dir \
-                --platforms=@toolchains_buildbuddy//platforms:linux_arm64 \
-                --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_arm64 \
-                --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_arm64 \
-                --remote_local_fallback=false \
-                --strategy=CppCompile=remote \
-                --incompatible_enable_cc_toolchain_resolution \
-                --host_platform=@toolchains_buildbuddy//platforms:linux_x86_64 \
-                --toolchain_resolution_debug=cpp \
-                --toolchain_resolution_override=@bazel_tools//tools/cpp:toolchain_type=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64
           - name: local-macos-x86_64-rbe-linux-x86_64
             os: macos-15-intel
             command: >-
