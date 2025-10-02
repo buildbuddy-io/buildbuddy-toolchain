@@ -14,3 +14,9 @@ alias(
     name = "windows_msvc_x86_64",
     actual = "@buildbuddy_toolchain//:windows_msvc_cc_toolchain"
 )
+
+filegroup(
+    name = "all_files",
+    srcs = glob(["*"]),
+    visibility = ["//:__subpackages__"],
+)

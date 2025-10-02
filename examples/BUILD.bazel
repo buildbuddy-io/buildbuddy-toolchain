@@ -1,0 +1,45 @@
+load("@bazel_binaries//:defs.bzl", "bazel_binaries")
+load(
+    "@rules_bazel_integration_test//bazel_integration_test:defs.bzl",
+    "bazel_integration_test",
+    "default_test_runner",
+)
+
+# Test runner for integration tests
+default_test_runner(
+    name = "test_runner",
+    bazel_cmds = [
+        "info",
+        "build //:main",
+    ],
+)
+
+# Filegroup to collect child workspace files
+filegroup(
+    name = "bzlmod_workspace_files",
+    srcs = [
+        "bzlmod/.bazelrc",
+        "bzlmod/.gitignore",
+        "bzlmod/BUILD",
+        "bzlmod/MODULE.bazel",
+        "bzlmod/main.cc",
+    ],
+)
+
+# Integration test using the bzlmod example workspace
+bazel_integration_test(
+    name = "bzlmod_test",
+    bazel_binaries = bazel_binaries,
+    bazel_version = bazel_binaries.versions.current,
+    tags = [
+        "exclusive",
+        "manual",
+    ],
+    test_runner = ":test_runner",
+    timeout = "long",
+    workspace_files = [
+        ":bzlmod_workspace_files",
+        "//:local_repository_files",
+    ],
+    workspace_path = "bzlmod",
+)

@@ -36,3 +36,9 @@ alias(
     name = "windows_x86_64",
     actual = "@buildbuddy_toolchain//:platform_windows",
 )
+
+filegroup(
+    name = "all_files",
+    srcs = glob(["*"]),
+    visibility = ["//:__subpackages__"],
+)
