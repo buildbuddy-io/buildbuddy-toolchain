@@ -47,8 +47,8 @@ jobs:
             --config=remote-linux \
             --remote_header="x-buildbuddy-api-key=$BUILDBUDDY_API_KEY" \
             --experimental_platform_in_output_dir \
-            --platforms=@toolchains_buildbuddy//platforms:${{ matrix.rbe_platform }} \
-            --extra_execution_platforms=@toolchains_buildbuddy//platforms:${{ matrix.rbe_platform }} \
-            --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:${{ matrix.rbe_toolchain }}
+            --platforms=@buildbuddy_toolchain//platforms:${{ matrix.rbe_platform }} \
+            --extra_execution_platforms=@buildbuddy_toolchain//platforms:${{ matrix.rbe_platform }} \
+            --extra_toolchains=@buildbuddy_toolchain//toolchains/cc:${{ matrix.rbe_toolchain }}
         working-directory: examples/workspace
         shell: bash
