@@ -62,12 +62,7 @@ bazel_integration_test(
     name = "bzlmod_test",
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
-    tags = [
-        "exclusive",
-        "manual",
-    ],
     test_runner = ":test_runner",
-    timeout = "long",
     workspace_files = [
         ":bzlmod_workspace_files",
         "//:local_repository_files",
@@ -83,12 +78,7 @@ bazel_integration_test(
     ],
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
-    tags = [
-        "exclusive",
-        "manual",
-    ],
     test_runner = ":rbe_test_runner",
-    timeout = "long",
     workspace_files = [
         ":bzlmod_workspace_files",
         "//:local_repository_files",
@@ -101,12 +91,7 @@ bazel_integration_test(
     name = "workspace_test",
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
-    tags = [
-        "exclusive",
-        "manual",
-    ],
     test_runner = ":test_runner",
-    timeout = "long",
     workspace_files = [
         ":workspace_workspace_files",
         "//:local_repository_files",
@@ -122,12 +107,7 @@ bazel_integration_test(
     ],
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
-    tags = [
-        "exclusive",
-        "manual",
-    ],
     test_runner = ":workspace_rbe_test_runner",
-    timeout = "long",
     workspace_files = [
         ":workspace_workspace_files",
         "//:local_repository_files",
