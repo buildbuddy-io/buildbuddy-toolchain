@@ -1,5 +1,6 @@
 # A bzlmod example will be provided separately
 common --noenable_bzlmod
+common --enable_workspace
 
 
 # Use a minimal set of environment variables for action execution to improve
