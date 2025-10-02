@@ -14,6 +14,16 @@ default_test_runner(
     ],
 )
 
+# Remote execution test runner that exercises BuildBuddy RBE
+default_test_runner(
+    name = "rbe_test_runner",
+    bazel_cmds = [
+        "info",
+        "build //:main --config=remote-linux --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64 --noremote_accept_cached --noremote_upload_local_results --experimental_platform_in_output_dir --remote_header=x-buildbuddy-api-key=${BUILDBUDDY_API_KEY}",
+        "build //:main --config=remote-linux-arm64 --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_arm64 --noremote_accept_cached --noremote_upload_local_results --experimental_platform_in_output_dir --remote_header=x-buildbuddy-api-key=${BUILDBUDDY_API_KEY}",
+    ],
+)
+
 # Filegroup to collect child workspace files
 filegroup(
     name = "bzlmod_workspace_files",
@@ -36,6 +46,27 @@ bazel_integration_test(
         "manual",
     ],
     test_runner = ":test_runner",
+    timeout = "long",
+    workspace_files = [
+        ":bzlmod_workspace_files",
+        "//:local_repository_files",
+    ],
+    workspace_path = "bzlmod",
+)
+
+# Integration test that verifies remote builds using BuildBuddy RBE
+bazel_integration_test(
+    name = "bzlmod_rbe_test",
+    additional_env_inherit = [
+        "BUILDBUDDY_API_KEY",
+    ],
+    bazel_binaries = bazel_binaries,
+    bazel_version = bazel_binaries.versions.current,
+    tags = [
+        "exclusive",
+        "manual",
+    ],
+    test_runner = ":rbe_test_runner",
     timeout = "long",
     workspace_files = [
         ":bzlmod_workspace_files",
