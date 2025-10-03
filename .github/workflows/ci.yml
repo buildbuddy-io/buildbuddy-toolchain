@@ -27,7 +27,7 @@ jobs:
           BUILDBUDDY_API_KEY: ${{ secrets.BUILDBUDDY_API_KEY }}
           MSYS_NO_PATHCONV: 1
         run: >-
-          bazel test //examples/:${{ matrix.test }}
+          bazel test //examples:${{ matrix.test }}
           --bes_results_url=https://buildbuddy.buildbuddy.io/invocation/
           --bes_backend=grpcs://buildbuddy.buildbuddy.io
           --remote_cache=grpcs://buildbuddy.buildbuddy.io
