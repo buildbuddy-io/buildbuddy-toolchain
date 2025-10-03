@@ -25,4 +25,4 @@ jobs:
         env:
           BUILDBUDDY_API_KEY: ${{ secrets.BUILDBUDDY_API_KEY }}
         run: bazel test //examples:all_tests
-        shell: bash
+        shell: pwsh
