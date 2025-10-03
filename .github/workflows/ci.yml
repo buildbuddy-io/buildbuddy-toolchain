@@ -7,26 +7,27 @@ on:
 
 jobs:
   integration-tests:
-    name: ${{ matrix.host }}
+    name: ${{ matrix.host }}-${{ matrix.test }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - {host: linux-x86_64, os: ubuntu-24.04, target: //examples:all_tests}
-          - {host: macos-arm64, os: macos-15, target: //examples:all_tests}
-          - {host: macos-x86_64, os: macos-15-intel, target: //examples:all_tests}
-          - {host: windows-x86_64, os: windows-2022, target: //examples:local_bzlmod_test}
+          - {host: linux-x86_64, os: ubuntu-24.04, test: all_tests}
+          - {host: macos-arm64, os: macos-15, test: all_tests}
+          - {host: macos-x86_64, os: macos-15-intel, test: all_tests}
+          #TODO(dan): get WORKSPACE example building in Windows CI
+          - {host: windows-x86_64, os: windows-2022, test: local_bzlmod_test}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run all integration tests
+      - name: Run integration tests
         env:
           BUILDBUDDY_API_KEY: ${{ secrets.BUILDBUDDY_API_KEY }}
           MSYS_NO_PATHCONV: 1
         run: >-
-          bazel test ${{ matrix.target }}
+          bazel test //examples/:${{ matrix.target }}
           --bes_results_url=https://buildbuddy.buildbuddy.io/invocation/
           --bes_backend=grpcs://buildbuddy.buildbuddy.io
           --remote_cache=grpcs://buildbuddy.buildbuddy.io
