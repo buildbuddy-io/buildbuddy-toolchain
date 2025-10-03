@@ -30,4 +30,5 @@ jobs:
           --bes_backend=grpcs://buildbuddy.buildbuddy.io
           --remote_cache=grpcs://buildbuddy.buildbuddy.io
           --remote_timeout=2m
+          --remote_header=x-buildbuddy-api-key="${BUILDBUDDY_API_KEY}"
         shell: pwsh
