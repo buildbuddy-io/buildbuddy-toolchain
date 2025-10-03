@@ -24,5 +24,10 @@ jobs:
       - name: Run all integration tests
         env:
           BUILDBUDDY_API_KEY: ${{ secrets.BUILDBUDDY_API_KEY }}
-        run: bazel test //examples:all_tests
+        run: >-
+          bazel test //examples:all_tests
+          --bes_results_url=https://buildbuddy.buildbuddy.io/invocation/
+          --bes_backend=grpcs://buildbuddy.buildbuddy.io
+          --remote_cache=grpcs://buildbuddy.buildbuddy.io
+          --remote_timeout=2m
         shell: pwsh
