@@ -60,7 +60,7 @@ default_test_runner(
 # Remote execution test runner for WORKSPACE (non-bzlmod)
 default_test_runner(
     name = "workspace_rbe_test_runner",
-    bazel_cmds = 
+    bazel_cmds = [
         "info",
         " ".join(_BAZEL_BUILD_CMD + _RBE_WORKSPACE_LINUX_X86_64_FLAGS + _REMOTE_SHARED_FLAGS),
         " ".join(_BAZEL_BUILD_CMD + _RBE_WORKSPACE_LINUX_ARM64_FLAGS + _REMOTE_SHARED_FLAGS),
