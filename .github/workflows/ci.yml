@@ -24,6 +24,7 @@ jobs:
       - name: Run all integration tests
         env:
           BUILDBUDDY_API_KEY: ${{ secrets.BUILDBUDDY_API_KEY }}
+          MSYS_NO_PATHCONV: 1
         run: >-
           bazel test //examples:all_tests
           --bes_results_url=https://buildbuddy.buildbuddy.io/invocation/
