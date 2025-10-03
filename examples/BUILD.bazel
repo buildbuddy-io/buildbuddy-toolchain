@@ -5,12 +5,45 @@ load(
     "default_test_runner",
 )
 
+_BAZEL_BUILD_CMD = ["build", "//:main"]
+
+_REMOTE_SHARED_FLAGS = [
+    "--noremote_accept_cached",
+    "--noremote_upload_local_results",
+    "--experimental_platform_in_output_dir",
+    "--remote_header=x-buildbuddy-api-key=${BUILDBUDDY_API_KEY}",
+]
+
+_RBE_BZLMOD_LINUX_X86_64_FLAGS = [
+    "--config=remote-linux",
+    "--extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64",
+]
+
+_RBE_BZLMOD_LINUX_ARM64_FLAGS = [
+    "--config=remote-linux-arm64",
+    "--extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_arm64",
+]
+
+_RBE_WORKSPACE_LINUX_X86_64_FLAGS = [
+    "--config=remote-linux",
+    "--platforms=@buildbuddy_toolchain//:platform_linux_x86_64",
+    "--extra_execution_platforms=@buildbuddy_toolchain//:platform_linux_x86_64",
+    "--extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain",
+]
+
+_RBE_WORKSPACE_LINUX_ARM64_FLAGS = [
+    "--config=remote-linux-arm64",
+    "--platforms=@buildbuddy_toolchain//:platform_linux_arm64",
+    "--extra_execution_platforms=@buildbuddy_toolchain//:platform_linux_arm64",
+    "--extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain_arm64",
+]
+
 # Test runner for integration tests
 default_test_runner(
     name = "test_runner",
     bazel_cmds = [
         "info",
-        "build //:main",
+        " ".join(_BAZEL_BUILD_CMD),
     ],
 )
 
@@ -19,18 +52,18 @@ default_test_runner(
     name = "rbe_test_runner",
     bazel_cmds = [
         "info",
-        "build //:main --config=remote-linux --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64 --noremote_accept_cached --noremote_upload_local_results --experimental_platform_in_output_dir --remote_header=x-buildbuddy-api-key=${BUILDBUDDY_API_KEY}",
-        "build //:main --config=remote-linux-arm64 --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_arm64 --noremote_accept_cached --noremote_upload_local_results --experimental_platform_in_output_dir --remote_header=x-buildbuddy-api-key=${BUILDBUDDY_API_KEY}",
+        " ".join(_BAZEL_BUILD_CMD + _RBE_BZLMOD_LINUX_X86_64_FLAGS + _REMOTE_SHARED_FLAGS),
+        " ".join(_BAZEL_BUILD_CMD + _RBE_BZLMOD_LINUX_ARM64_FLAGS + _REMOTE_SHARED_FLAGS),
     ],
 )
 
 # Remote execution test runner for WORKSPACE (non-bzlmod)
 default_test_runner(
     name = "workspace_rbe_test_runner",
-    bazel_cmds = [
+    bazel_cmds = 
         "info",
-        "build //:main --config=remote-linux --platforms=@buildbuddy_toolchain//:platform_linux_x86_64 --extra_execution_platforms=@buildbuddy_toolchain//:platform_linux_x86_64 --extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain --noremote_accept_cached --noremote_upload_local_results --experimental_platform_in_output_dir --remote_header=x-buildbuddy-api-key=${BUILDBUDDY_API_KEY}",
-        "build //:main --config=remote-linux --platforms=@buildbuddy_toolchain//:platform_linux_arm64 --extra_execution_platforms=@buildbuddy_toolchain//:platform_linux_arm64 --extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain_arm64 --noremote_accept_cached --noremote_upload_local_results --experimental_platform_in_output_dir --remote_header=x-buildbuddy-api-key=${BUILDBUDDY_API_KEY}",
+        " ".join(_BAZEL_BUILD_CMD + _RBE_WORKSPACE_LINUX_X86_64_FLAGS + _REMOTE_SHARED_FLAGS),
+        " ".join(_BAZEL_BUILD_CMD + _RBE_WORKSPACE_LINUX_ARM64_FLAGS + _REMOTE_SHARED_FLAGS),
     ],
 )
 
