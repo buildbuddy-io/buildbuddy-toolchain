@@ -44,9 +44,21 @@ common:remote --remote_executor=grpcs://remote.buildbuddy.io
 #   $ bazel build --config=remote-linux //...
 #
 common:remote-linux --config=remote
-common:remote-linux --platforms=@buildbuddy_toolchain//:platform_linux
-common:remote-linux --extra_execution_platforms=@buildbuddy_toolchain//:platform_linux
+common:remote-linux --platforms=@buildbuddy_toolchain//:platform_linux_x86_64
+common:remote-linux --extra_execution_platforms=@buildbuddy_toolchain//:platform_linux_x86_64
 common:remote-linux --extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain
+
+
+## Target Linux arm64 platform when build remotely
+#
+# Usage:
+#
+#   $ bazel build --config=remote-linux-arm64 //...
+#
+common:remote-linux-arm64 --config=remote
+common:remote-linux-arm64 --platforms=@buildbuddy_toolchain//:platform_linux_arm64
+common:remote-linux-arm64 --extra_execution_platforms=@buildbuddy_toolchain//:platform_linux_arm64
+common:remote-linux-arm64 --extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain_arm64
 
 
 ## Target Linux platform when build remotely
