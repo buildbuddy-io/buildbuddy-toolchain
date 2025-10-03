@@ -16,8 +16,7 @@ jobs:
           - {host: linux-x86_64, os: ubuntu-24.04, target: //examples:all_tests}
           - {host: macos-arm64, os: macos-15, target: //examples:all_tests}
           - {host: macos-x86_64, os: macos-15-intel, target: //examples:all_tests}
-          #TODO(dan): add windows support
-          #- {host: windows-x86_64, os: windows-2022, target: //examples:local_tests}
+          - {host: windows-x86_64, os: windows-2022, target: //examples:local_bzlmod_test}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,8 +24,7 @@ jobs:
       - name: Run all integration tests
         env:
           BUILDBUDDY_API_KEY: ${{ secrets.BUILDBUDDY_API_KEY }}
-          #TODO(dan): add windows support
-          #MSYS_NO_PATHCONV: 1
+          MSYS_NO_PATHCONV: 1
         run: >-
           bazel test ${{ matrix.target }}
           --bes_results_url=https://buildbuddy.buildbuddy.io/invocation/
