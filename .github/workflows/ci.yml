@@ -29,5 +29,5 @@ jobs:
           --bes_results_url=https://buildbuddy.buildbuddy.io/invocation/
           --bes_backend=grpcs://buildbuddy.buildbuddy.io
           --remote_cache=grpcs://buildbuddy.buildbuddy.io
-          --remote_header=x-buildbuddy-api-key="${BUILDBUDDY_API_KEY}"
+          --remote_header=x-buildbuddy-api-key="$BUILDBUDDY_API_KEY"
         shell: bash
