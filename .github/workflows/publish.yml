@@ -16,10 +16,9 @@ jobs:
       draft: false
       # We will open pull requests against the upstream BCR manually.
       open_pull_request: false
+      attest: false
     permissions:
-      attestations: write
       contents: write
-      id-token: write
     secrets:
       # Necessary to push to the BCR fork
       publish_token: ${{ secrets.BCR_PUBLISH_TOKEN }}
