@@ -10,6 +10,13 @@ on:
     secrets:
       publish_token:
         required: true
+  # Or, manually trigger from the GitHub UI
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: git tag to release
+        required: true
+        type: string
   # Or, developers can manually push a tag from their clone
   push:
     tags:
