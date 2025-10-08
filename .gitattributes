@@ -1,0 +1,5 @@
+# Tell git-archive to exclude files from the release tarball
+.bcr/ export-ignore
+.github/ export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
