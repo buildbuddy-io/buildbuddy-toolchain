@@ -32,10 +32,3 @@ jobs:
       release_files: buildbuddy-toolchain-*.tar.gz
       prerelease: false
       tag_name: ${{ inputs.tag_name || github.ref_name }}
-  publish:
-    needs: release
-    uses: ./.github/workflows/publish.yml
-    with:
-      tag_name: ${{ inputs.tag_name || github.ref_name }}
-    secrets:
-      publish_token: ${{ secrets.publish_token || secrets.BCR_PUBLISH_TOKEN }}
