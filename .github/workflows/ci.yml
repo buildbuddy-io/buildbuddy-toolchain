@@ -13,11 +13,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {host: linux-x86_64, os: ubuntu-24.04, test: all_tests}
-          - {host: macos-arm64, os: macos-15, test: all_tests}
-          - {host: macos-x86_64, os: macos-15-intel, test: all_tests}
+          - {host: linux-x86_64, os: ubuntu-24.04, test: all_tests, shell: bash}
+          - {host: macos-arm64, os: macos-15, test: all_tests, shell: bash}
+          - {host: macos-x86_64, os: macos-15-intel, test: all_tests, shell: bash}
           #TODO(dan): get WORKSPACE example building in Windows CI
-          - {host: windows-x86_64, os: windows-2022, test: local_bzlmod_test}
+          - {host: windows-x86_64, os: windows-2022, test: local_bzlmod_test, shell: pwsh}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,6 +31,7 @@ jobs:
           --bes_results_url=https://buildbuddy.buildbuddy.io/invocation/
           --bes_backend=grpcs://buildbuddy.buildbuddy.io
           --remote_cache=grpcs://buildbuddy.buildbuddy.io
-          --remote_header=x-buildbuddy-api-key="$BUILDBUDDY_API_KEY"
+          --remote_header=x-buildbuddy-api-key="${{ env.BUILDBUDDY_API_KEY }}"
           --test_output=all
-        shell: bash
+          --enable_runfiles
+        shell: ${{ matrix.shell }}
