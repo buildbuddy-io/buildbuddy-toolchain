@@ -33,5 +33,4 @@ jobs:
           --remote_cache=grpcs://buildbuddy.buildbuddy.io
           --remote_header=x-buildbuddy-api-key="$BUILDBUDDY_API_KEY"
           --test_output=all
-          --enable_runfiles
         shell: bash
