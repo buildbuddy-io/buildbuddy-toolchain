@@ -25,6 +25,7 @@ load(
     "variable_with_value",
     "with_feature_set",
 )
+load("@rules_cc//cc/common:cc_common.bzl", "cc_common")
 
 def layering_check_features(compiler):
     if compiler != "clang":
@@ -1010,7 +1011,6 @@ def _impl(ctx):
         ],
     )
 
-    dynamic_library_linker_tool_path = tool_paths
     dynamic_library_linker_tool_feature = feature(
         name = "dynamic_library_linker_tool",
         flag_sets = [
@@ -1173,6 +1173,8 @@ def _impl(ctx):
             fission_support_feature,
             strip_debug_symbols_feature,
             coverage_feature,
+            gcc_coverage_map_format_feature,
+            llvm_coverage_map_format_feature,
             supports_pic_feature,
         ] + (
             [
@@ -1201,6 +1203,8 @@ def _impl(ctx):
             ] if ctx.attr.supports_start_end_lib else []
         ) + [
             coverage_feature,
+            gcc_coverage_map_format_feature,
+            llvm_coverage_map_format_feature,
             default_compile_flags_feature,
             default_link_flags_feature,
             fdo_optimize_feature,

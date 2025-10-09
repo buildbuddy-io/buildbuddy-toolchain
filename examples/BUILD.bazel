@@ -5,7 +5,10 @@ load(
     "default_test_runner",
 )
 
-_BAZEL_BUILD_CMD = ["build", "//:main"]
+_BAZEL_BUILD_CMD = [
+    "build",
+    "//:main",
+]
 
 _REMOTE_SHARED_FLAGS = [
     "--noremote_accept_cached",
@@ -93,10 +96,10 @@ filegroup(
 # Local integration test for bzlmod example
 bazel_integration_test(
     name = "local_bzlmod_test",
+    timeout = "moderate",
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
     test_runner = ":test_runner",
-    timeout = "moderate",
     workspace_files = [
         ":bzlmod_workspace_files",
         "//:local_repository_files",
@@ -107,6 +110,7 @@ bazel_integration_test(
 # RBE integration test for bzlmod example
 bazel_integration_test(
     name = "rbe_bzlmod_test",
+    timeout = "moderate",
     additional_env_inherit = [
         "BUILDBUDDY_API_KEY",
     ],
@@ -114,7 +118,6 @@ bazel_integration_test(
     bazel_version = bazel_binaries.versions.current,
     tags = [],
     test_runner = ":rbe_test_runner",
-    timeout = "moderate",
     workspace_files = [
         ":bzlmod_workspace_files",
         "//:local_repository_files",
@@ -125,10 +128,10 @@ bazel_integration_test(
 # Local integration test for workspace (non-bzlmod) example
 bazel_integration_test(
     name = "local_workspace_test",
+    timeout = "moderate",
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
     test_runner = ":test_runner",
-    timeout = "moderate",
     workspace_files = [
         ":workspace_workspace_files",
         "//:local_repository_files",
@@ -139,6 +142,7 @@ bazel_integration_test(
 # RBE integration test for workspace (non-bzlmod) example
 bazel_integration_test(
     name = "rbe_workspace_test",
+    timeout = "moderate",
     additional_env_inherit = [
         "BUILDBUDDY_API_KEY",
     ],
@@ -146,7 +150,6 @@ bazel_integration_test(
     bazel_version = bazel_binaries.versions.current,
     tags = [],
     test_runner = ":workspace_rbe_test_runner",
-    timeout = "moderate",
     workspace_files = [
         ":workspace_workspace_files",
         "//:local_repository_files",
