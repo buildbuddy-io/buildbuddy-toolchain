@@ -5,6 +5,8 @@ load(
     "java_runtime_files",
 )
 load("@rules_cc//cc:defs.bzl", "cc_toolchain", "cc_toolchain_suite")
+load("@rules_java//java/toolchains:java_runtime.bzl", "java_runtime")
+load("@rules_java//toolchains:default_java_toolchain.bzl", "default_java_toolchain")
 load(":gcc_config.bzl", "GCC_BUILTIN_INCLUDE_PATHS")
 load(":msvc_config.bzl", "MSVC_BUILTIN_INCLUDE_PATHS")
 load(":cc_toolchain_config.bzl", "cc_toolchain_config")
@@ -18,7 +20,7 @@ exports_files(glob(["bin/*", "lib/*"], allow_empty = True))
 ## Platforms
 
 alias(
-    name = "platform", 
+    name = "platform",
     actual = "%{default_platform}",
 )
 
@@ -126,12 +128,12 @@ default_java_toolchain(
 ## Defaults
 
 alias(
-    name = "toolchain", 
+    name = "toolchain",
     actual="%{default_cc_toolchain_suite}"
 )
 
 alias(
-    name = "cc_toolchain", 
+    name = "cc_toolchain",
     actual="%{default_cc_toolchain}"
 )
 

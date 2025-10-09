@@ -10,5 +10,5 @@ platform(
     exec_properties = {
         "some_property": "some_value",
     },
-    parents = ["@toolchains_buildbuddy//platforms:linux_x86_64"]
+    parents = ["@toolchains_buildbuddy//platforms:linux_x86_64"],
 )

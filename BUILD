@@ -11,7 +11,10 @@ filegroup(
     name = "local_repository_files",
     srcs = [
         ".bazelversion",
-    ] + glob(["*"], exclude = [".bazelversion"]) + [
+    ] + glob(
+        ["*"],
+        exclude = [".bazelversion"],
+    ) + [
         "//platforms:all_files",
         "//templates:all_files",
         "//toolchains/cc:all_files",
