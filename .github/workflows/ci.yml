@@ -25,8 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run integration tests (bash)
-        if: matrix.shell == 'bash'
+      - name: Run integration tests
         run: >-
           bazel test //examples:${{ matrix.test }}
           --bes_results_url=https://buildbuddy.buildbuddy.io/invocation/
@@ -35,16 +34,4 @@ jobs:
           --remote_header=x-buildbuddy-api-key="${{ env.BUILDBUDDY_API_KEY }}"
           --test_output=all
           --enable_runfiles
-        shell: bash
-
-      - name: Run integration tests (pwsh)
-        if: matrix.shell == 'pwsh'
-        run: >-
-          bazel test //examples:${{ matrix.test }}
-          --bes_results_url=https://buildbuddy.buildbuddy.io/invocation/
-          --bes_backend=grpcs://buildbuddy.buildbuddy.io
-          --remote_cache=grpcs://buildbuddy.buildbuddy.io
-          --remote_header=x-buildbuddy-api-key="${{ env.BUILDBUDDY_API_KEY }}"
-          --test_output=all
-          --enable_runfiles
-        shell: pwsh
+        shell: ${{ matrix.shell }}
