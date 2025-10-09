@@ -13,6 +13,11 @@ bazel_dep(
     version = "0.34.0",
     dev_dependency = True,
 )
+bazel_dep(
+    name = "buildifier_prebuilt",
+    version = "8.2.0.2",
+    dev_dependency = True,
+)
 
 buildbuddy = use_extension("//:extensions.bzl", "buildbuddy")
 use_repo(buildbuddy, "buildbuddy_toolchain")

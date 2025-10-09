@@ -11,7 +11,7 @@ local_path_override(
 
 # The module provides an extension named "buildbuddy".
 # The extension creates a repository named "@buildbuddy_toolchain".
-buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbuddy")
+buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbuddy")  # buildifier: disable=unused-variable
 
 # Example customizations (all optional):
 #

@@ -1,5 +1,4 @@
 def _buildbuddy_toolchain_impl(rctx):
-    repo_path = str(rctx.path(""))
     relative_path_prefix = "external/%s/" % rctx.name
     toolchain_path_prefix = relative_path_prefix
 
@@ -89,9 +88,11 @@ def _buildbuddy_toolchain_impl(rctx):
 
     # Repository implementation functions can be restarted, keep expensive ops at the end.
     if rctx.attr.llvm:
+        # buildifier: disable=print
         print("BuildBuddy toolchain LLVM support is deprecated.\nPlease use https://github.com/bazel-contrib/toolchains_llvm/ instead.")
 
 def buildbuddy_cc_toolchain(name):
+    # buildifier: disable=print
     print("buildbuddy_cc_toolchain support is deprecated.\nPlease use @buildbuddy_toolchain//:ubuntu_cc_toolchain instead.")
 
 _buildbuddy_toolchain = repository_rule(
@@ -139,6 +140,7 @@ def buildbuddy(
         windows_kits_version = "10.0.22621.0",
         extra_cxx_builtin_include_directories = []):
     if java_version != "":
+        # buildifier: disable=print
         print("""
 WARNING: java_version support in buildbuddy-toolchain is deprecated and will be removed in a future release.
 Please visit https://www.buildbuddy.io/docs/rbe-setup#java-toolchain for the recommended Java toolchain setup.""")
