@@ -33,7 +33,6 @@ jobs:
           bazel test //examples:${{ matrix.test }}
           --bes_results_url=https://buildbuddy.buildbuddy.io/invocation/
           --bes_backend=grpcs://buildbuddy.buildbuddy.io
-          --remote_cache=grpcs://buildbuddy.buildbuddy.io
           --remote_header=x-buildbuddy-api-key="${{ env.BUILDBUDDY_API_KEY }}"
           --test_output=all
           --enable_runfiles
