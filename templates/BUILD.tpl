@@ -5,8 +5,8 @@ load(
     "java_runtime_files",
 )
 load("@rules_cc//cc:defs.bzl", "cc_toolchain", "cc_toolchain_suite")
-load("@rules_java//java/toolchains:java_runtime.bzl", "java_runtime")
-load("@rules_java//toolchains:default_java_toolchain.bzl", "default_java_toolchain")
+#XXX load("@rules_java//java/toolchains:java_runtime.bzl", "java_runtime")
+#XXX load("@rules_java//toolchains:default_java_toolchain.bzl", "default_java_toolchain")
 load(":gcc_config.bzl", "GCC_BUILTIN_INCLUDE_PATHS")
 load(":msvc_config.bzl", "MSVC_BUILTIN_INCLUDE_PATHS")
 load(":cc_toolchain_config.bzl", "cc_toolchain_config")
