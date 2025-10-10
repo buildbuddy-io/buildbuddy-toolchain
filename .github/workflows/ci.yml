@@ -19,7 +19,7 @@ jobs:
           - {host: linux-x86_64, os: ubuntu-24.04, test: all_tests, shell: bash}
           - {host: macos-arm64, os: macos-15, test: all_tests, shell: bash}
           - {host: macos-x86_64, os: macos-15-intel, test: all_tests, shell: bash}
-          #TODO(dan): get Windows tests passing - {host: windows-x86_64, os: windows-2022, test: local_bzlmod_test, shell: pwsh}
+          - {host: windows-x86_64, os: windows-2022, test: local_bzlmod_test, shell: pwsh}
     env:
       BUILDBUDDY_API_KEY: ${{ secrets.BUILDBUDDY_API_KEY }}
       MSYS_NO_PATHCONV: 1
