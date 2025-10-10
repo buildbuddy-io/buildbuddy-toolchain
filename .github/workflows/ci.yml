@@ -30,8 +30,8 @@ jobs:
       - name: Run integration tests
         run: >-
           bazel test //:all //examples:${{ matrix.test }}
-          --bes_results_url=https://buildbuddy.buildbuddy.io/invocation/
-          --bes_backend=grpcs://buildbuddy.buildbuddy.io
+          --bes_results_url=https://buildbuddy-toolchain.buildbuddy.io/invocation/
+          --bes_backend=grpcs://buildbuddy-toolchain.buildbuddy.io
           --remote_header=x-buildbuddy-api-key="${{ env.BUILDBUDDY_API_KEY }}"
           --test_output=all
           --enable_runfiles
