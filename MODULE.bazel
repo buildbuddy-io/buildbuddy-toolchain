@@ -1,6 +1,5 @@
 module(
     name = "toolchains_buildbuddy",
-    version = "0.0.1",
     repo_name = "io_buildbuddy_buildbuddy_toolchain",
 )
 
