@@ -4,7 +4,7 @@ bcr_test_module:
   module_path: "examples/bzlmod"
   matrix:
     platform: ["ubuntu2004"]
-    bazel: [7.x]
+    bazel: ["7.x", "8.x", "9.x"]
   tasks:
     build_module:
       name: "build module"
