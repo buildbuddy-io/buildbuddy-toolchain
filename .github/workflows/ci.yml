@@ -30,6 +30,7 @@ jobs:
       - name: Run integration tests
         run: >-
           bazel test //:all //examples:${{ matrix.test }}
+          --announce_rc
           --bes_results_url=https://buildbuddy-toolchain.buildbuddy.io/invocation/
           --bes_backend=grpcs://buildbuddy-toolchain.buildbuddy.io
           --remote_cache=grpcs://buildbuddy-toolchain.buildbuddy.io
