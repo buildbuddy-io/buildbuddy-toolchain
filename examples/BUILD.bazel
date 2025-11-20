@@ -7,7 +7,7 @@ load(
 
 _BAZEL_STARTUP_OPTIONS = " ".join([
     "--nohome_rc",
-    "--nosystem_rc",
+    # "--nosystem_rc",
 ])
 
 _BAZEL_BUILD_CMD = [
