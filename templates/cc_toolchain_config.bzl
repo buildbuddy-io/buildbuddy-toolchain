@@ -1057,7 +1057,6 @@ def _impl(ctx):
     # can't resolve them unless the library is linked against gcov.
     coverage_feature = feature(
         name = "coverage",
-        provides = ["profile"],
         flag_sets = [
             flag_set(
                 actions = [
