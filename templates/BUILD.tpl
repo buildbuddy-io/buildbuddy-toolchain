@@ -210,7 +210,7 @@ cc_toolchain(
 cc_toolchain_config(
     name = "ubuntu_cc_toolchain_config",
     cpu = "k8",
-    compiler = "compiler",
+    compiler = "gcc",
     toolchain_identifier = "local",
     host_system_name = "local",
     target_system_name = "local",
