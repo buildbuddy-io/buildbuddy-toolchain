@@ -29,6 +29,10 @@ jobs:
 
       - name: Run integration tests
         run: >-
+          bazel clean --expunge
+
+      - name: Run integration tests
+        run: >-
           bazel test //:all //examples:${{ matrix.test }}
           --bes_results_url=https://buildbuddy-toolchain.buildbuddy.io/invocation/
           --bes_backend=grpcs://buildbuddy-toolchain.buildbuddy.io
@@ -36,4 +40,5 @@ jobs:
           --remote_timeout=2m
           --remote_header=x-buildbuddy-api-key="${{ env.BUILDBUDDY_API_KEY }}"
           --test_output=all
+          --remote_instance_name=blah
           --enable_runfiles
