@@ -27,8 +27,12 @@ def _buildbuddy_toolchain_impl(rctx):
     linux_default_arch_constraint = "x86_64"
     linux_default_arch_exec_property = "amd64"
     if rctx.os.name.lower() == "linux":
-        linux_default_arch_constraint = "aarch64" if rctx.os.arch == "aarch64" else "x86_64"
-        linux_default_arch_exec_property = "arm64" if rctx.os.arch == "aarch64" else "amd64"
+        if rctx.os.arch == "aarch64":
+            linux_default_arch_constraint = "aarch64"
+            linux_default_arch_exec_property = "arm64"
+        else:
+            linux_default_arch_constraint = "x86_64"
+            linux_default_arch_exec_property = "amd64"
 
     substitutions = {
         "%{toolchain_path_prefix}": toolchain_path_prefix,
