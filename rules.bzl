@@ -21,6 +21,15 @@ def _buildbuddy_toolchain_impl(rctx):
 
     default_tool_versions = _default_tool_versions(default_container_image)
 
+    # Only mirror the host arch onto platforms that share the host OS. For other OS
+    # platforms, fall back to the common/default arch so users opt-in to non-default
+    # variants instead of inheriting them implicitly from the host.
+    linux_default_arch_constraint = "x86_64"
+    linux_default_arch_exec_property = "amd64"
+    if rctx.os.name.lower() == "linux":
+        linux_default_arch_constraint = "aarch64" if rctx.os.arch == "aarch64" else "x86_64"
+        linux_default_arch_exec_property = "arm64" if rctx.os.arch == "aarch64" else "amd64"
+
     substitutions = {
         "%{toolchain_path_prefix}": toolchain_path_prefix,
         "%{tools_path_prefix}": "",
@@ -38,8 +47,8 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{default_arm64_container_image}": default_container_image,
         "%{default_docker_network}": "off",
         "%{default_platform}": default_platform,
-        "%{default_arch_constraint}": "aarch64" if rctx.os.arch == "aarch64" else "x86_64",
-        "%{default_arch_exec_property}": "arm64" if rctx.os.arch == "aarch64" else "amd64",
+        "%{default_arch_constraint}": linux_default_arch_constraint,
+        "%{default_arch_exec_property}": linux_default_arch_exec_property,
         "%{java_version}": rctx.attr.java_version or default_tool_versions["java"],
         # Handle removal of JDK8_JVM_OPTS in bazel 6.0.0:
         # https://github.com/bazelbuild/bazel/commit/3a0a4f3b6931fbb6303fc98eec63d4434d8aece4
