@@ -5,6 +5,11 @@ load(
     "default_test_runner",
 )
 
+_BAZEL_STARTUP_OPTIONS = " ".join([
+    # "--nohome_rc",
+    "--nosystem_rc",
+])
+
 _BAZEL_BUILD_CMD = [
     "build",
     "//:main",
@@ -99,6 +104,7 @@ bazel_integration_test(
     timeout = "moderate",
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
+    startup_options = _BAZEL_STARTUP_OPTIONS,
     test_runner = ":test_runner",
     workspace_files = [
         ":bzlmod_workspace_files",
@@ -116,6 +122,7 @@ bazel_integration_test(
     ],
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
+    startup_options = _BAZEL_STARTUP_OPTIONS,
     tags = [],
     test_runner = ":rbe_test_runner",
     workspace_files = [
@@ -131,6 +138,7 @@ bazel_integration_test(
     timeout = "moderate",
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
+    startup_options = _BAZEL_STARTUP_OPTIONS,
     test_runner = ":test_runner",
     workspace_files = [
         ":workspace_workspace_files",
@@ -148,6 +156,7 @@ bazel_integration_test(
     ],
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
+    startup_options = _BAZEL_STARTUP_OPTIONS,
     tags = [],
     test_runner = ":workspace_rbe_test_runner",
     workspace_files = [
