@@ -47,8 +47,13 @@ buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbudd
 #
 # (Optional) Use the repository directly instead.
 #     use_repo(buildbuddy, "buildbuddy_toolchain")
+
+# Register the toolchains with higher priority than dependent modules (i.e. rules_cc)
 #
-# (Optional) Register the toolchains.
-#     register_toolchains(
-#         "@toolchains_buildbuddy//toolchains/cc:all",
-#     )
+# User may explicitly choose a specific toolchain using the `--extra_toolchains=` flag.
+# See 'examples/bzlmod/.bazelrc' file for more details.
+register_toolchains(
+    "@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64",
+    "@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_arm64",
+    "@toolchains_buildbuddy//toolchains/cc:windows_msvc_x86_64",
+)
