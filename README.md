@@ -11,10 +11,10 @@ For the most up-to-date instructions, see our [Official Documentation](https://b
 Add the following to your `MODULE.bazel` file:
 
 ```python
-bazel_dep(name = "toolchains_buildbuddy")
+bazel_dep(name = "toolchains_buildbuddy", version = "0.0.4")
 
 # Use the extension to create toolchain and platform targets
-buildbuddy = use_extension("@buildbuddy//:extensions.bzl", "buildbuddy")
+buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbuddy")
 ```
 
 The execution platforms and CC toolchains should be registered automatically under BzlMod.
@@ -28,9 +28,9 @@ Add the following lines to your `WORKSPACE` file. You'll probably want to pin yo
 ```python
 http_archive(
     name = "io_buildbuddy_buildbuddy_toolchain",
-    sha256 = "62ab60d07205f98c4fc3735bb21630272490fce193c59c3bb2cb2b962176400c",
-    strip_prefix = "buildbuddy-toolchain-0c575cc56a0c5ed69a6dfb544a3f794b9d1b474d",
-    urls = ["https://github.com/buildbuddy-io/buildbuddy-toolchain/archive/0c575cc56a0c5ed69a6dfb544a3f794b9d1b474d.tar.gz"],
+    integrity = "sha256-4rtmioGI2dzQey1h0fw7z2exUCCelNv0Uff7uwrQihc=",
+    strip_prefix = "buildbuddy-toolchain-v0.0.4",
+    urls = ["https://github.com/buildbuddy-io/buildbuddy-toolchain/releases/download/v0.0.4/buildbuddy-toolchain-v0.0.4.tar.gz"],
 )
 
 load("@io_buildbuddy_buildbuddy_toolchain//:deps.bzl", "buildbuddy_deps")
