@@ -10,63 +10,102 @@ _BAZEL_BUILD_CMD = [
     "//:main",
 ]
 
-_REMOTE_SHARED_FLAGS = [
+# Flags for bzlmod-based builds
+_BZLMOD_FLAGS = [
+    "--enable_bzlmod",
+    "--lockfile_mode=update",
+]
+
+# Flags for WORKSPACE-based builds
+_WORKSPACE_FLAGS = [
+    "--noenable_bzlmod",
+    "--enable_workspace",
+]
+
+# Flags shared across all builds (local and remote)
+_COMMON_FLAGS = [
+    "--incompatible_strict_action_env",
+]
+
+# BuildBuddy Build Event Service flags
+_BES_FLAGS = [
+    "--bes_results_url=https://app.buildbuddy.io/invocation/",
+    "--bes_backend=grpcs://remote.buildbuddy.io",
+]
+
+# Common RBE flags
+_RBE_COMMON_FLAGS = [
+    "--remote_executor=grpcs://remote.buildbuddy.io",
+    "--remote_timeout=3600",
     "--noremote_accept_cached",
     "--noremote_upload_local_results",
     "--experimental_platform_in_output_dir",
     "--remote_header=x-buildbuddy-api-key=${BUILDBUDDY_API_KEY}",
 ]
 
+# Platform and toolchain flags for bzlmod Linux x86_64
 _RBE_BZLMOD_LINUX_X86_64_FLAGS = [
-    "--config=remote-linux",
+    "--platforms=@toolchains_buildbuddy//platforms:linux_x86_64",
+    "--extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_x86_64",
     "--extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64",
 ]
 
+# Platform and toolchain flags for bzlmod Linux arm64
 _RBE_BZLMOD_LINUX_ARM64_FLAGS = [
-    "--config=remote-linux-arm64",
+    "--platforms=@toolchains_buildbuddy//platforms:linux_arm64",
+    "--extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_arm64",
     "--extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_arm64",
 ]
 
+# Platform and toolchain flags for WORKSPACE Linux x86_64
 _RBE_WORKSPACE_LINUX_X86_64_FLAGS = [
-    "--config=remote-linux",
     "--platforms=@buildbuddy_toolchain//:platform_linux_x86_64",
     "--extra_execution_platforms=@buildbuddy_toolchain//:platform_linux_x86_64",
     "--extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain",
 ]
 
+# Platform and toolchain flags for WORKSPACE Linux arm64
 _RBE_WORKSPACE_LINUX_ARM64_FLAGS = [
-    "--config=remote-linux-arm64",
     "--platforms=@buildbuddy_toolchain//:platform_linux_arm64",
     "--extra_execution_platforms=@buildbuddy_toolchain//:platform_linux_arm64",
     "--extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain_arm64",
 ]
 
-# Test runner for integration tests
+# Test runner for local bzlmod integration tests
 default_test_runner(
-    name = "test_runner",
+    name = "bzlmod_test_runner",
     bazel_cmds = [
         "info",
-        " ".join(_BAZEL_BUILD_CMD),
+        " ".join(_BAZEL_BUILD_CMD + _BZLMOD_FLAGS + _COMMON_FLAGS),
+    ],
+)
+
+# Test runner for local WORKSPACE integration tests
+default_test_runner(
+    name = "workspace_test_runner",
+    bazel_cmds = [
+        "info",
+        " ".join(_BAZEL_BUILD_CMD + _WORKSPACE_FLAGS + _COMMON_FLAGS),
     ],
 )
 
 # Remote execution test runner that exercises BuildBuddy RBE (bzlmod)
 default_test_runner(
-    name = "rbe_test_runner",
+    name = "rbe_bzlmod_test_runner",
     bazel_cmds = [
         "info",
-        " ".join(_BAZEL_BUILD_CMD + _RBE_BZLMOD_LINUX_X86_64_FLAGS + _REMOTE_SHARED_FLAGS),
-        " ".join(_BAZEL_BUILD_CMD + _RBE_BZLMOD_LINUX_ARM64_FLAGS + _REMOTE_SHARED_FLAGS),
+        " ".join(_BAZEL_BUILD_CMD + _BZLMOD_FLAGS + _COMMON_FLAGS + _BES_FLAGS + _RBE_COMMON_FLAGS + _RBE_BZLMOD_LINUX_X86_64_FLAGS),
+        " ".join(_BAZEL_BUILD_CMD + _BZLMOD_FLAGS + _COMMON_FLAGS + _BES_FLAGS + _RBE_COMMON_FLAGS + _RBE_BZLMOD_LINUX_ARM64_FLAGS),
     ],
 )
 
 # Remote execution test runner for WORKSPACE (non-bzlmod)
 default_test_runner(
-    name = "workspace_rbe_test_runner",
+    name = "rbe_workspace_test_runner",
     bazel_cmds = [
         "info",
-        " ".join(_BAZEL_BUILD_CMD + _RBE_WORKSPACE_LINUX_X86_64_FLAGS + _REMOTE_SHARED_FLAGS),
-        " ".join(_BAZEL_BUILD_CMD + _RBE_WORKSPACE_LINUX_ARM64_FLAGS + _REMOTE_SHARED_FLAGS),
+        " ".join(_BAZEL_BUILD_CMD + _WORKSPACE_FLAGS + _COMMON_FLAGS + _BES_FLAGS + _RBE_COMMON_FLAGS + _RBE_WORKSPACE_LINUX_X86_64_FLAGS),
+        " ".join(_BAZEL_BUILD_CMD + _WORKSPACE_FLAGS + _COMMON_FLAGS + _BES_FLAGS + _RBE_COMMON_FLAGS + _RBE_WORKSPACE_LINUX_ARM64_FLAGS),
     ],
 )
 
@@ -74,7 +113,6 @@ default_test_runner(
 filegroup(
     name = "bzlmod_workspace_files",
     srcs = [
-        "bzlmod/.bazelrc",
         "bzlmod/.gitignore",
         "bzlmod/BUILD",
         "bzlmod/MODULE.bazel",
@@ -85,7 +123,6 @@ filegroup(
 filegroup(
     name = "workspace_workspace_files",
     srcs = [
-        "workspace/.bazelrc",
         "workspace/.gitignore",
         "workspace/BUILD",
         "workspace/WORKSPACE",
@@ -99,7 +136,7 @@ bazel_integration_test(
     timeout = "moderate",
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
-    test_runner = ":test_runner",
+    test_runner = ":bzlmod_test_runner",
     workspace_files = [
         ":bzlmod_workspace_files",
         "//:local_repository_files",
@@ -117,7 +154,7 @@ bazel_integration_test(
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
     tags = [],
-    test_runner = ":rbe_test_runner",
+    test_runner = ":rbe_bzlmod_test_runner",
     workspace_files = [
         ":bzlmod_workspace_files",
         "//:local_repository_files",
@@ -131,7 +168,7 @@ bazel_integration_test(
     timeout = "moderate",
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
-    test_runner = ":test_runner",
+    test_runner = ":workspace_test_runner",
     workspace_files = [
         ":workspace_workspace_files",
         "//:local_repository_files",
@@ -149,7 +186,7 @@ bazel_integration_test(
     bazel_binaries = bazel_binaries,
     bazel_version = bazel_binaries.versions.current,
     tags = [],
-    test_runner = ":workspace_rbe_test_runner",
+    test_runner = ":rbe_workspace_test_runner",
     workspace_files = [
         ":workspace_workspace_files",
         "//:local_repository_files",
