@@ -17,9 +17,22 @@ bazel_dep(name = "toolchains_buildbuddy", version = "0.0.4")
 buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbuddy")
 ```
 
-The execution platforms and CC toolchains should be registered automatically under BzlMod.
+You can build remotely using these flags:
 
-For a more detailed example and customization options, see our [BzlMod Example](https://github.com/buildbuddy-io/buildbuddy-toolchain/tree/master/examples/bzlmod).
+```
+bazel build //your:target \
+    --enable_bzlmod \
+    --lockfile_mode=update \
+    --incompatible_strict_action_env \
+    --bes_results_url=https://app.buildbuddy.io/invocation/ \
+    --bes_backend=grpcs://remote.buildbuddy.io \
+    --remote_executor=grpcs://remote.buildbuddy.io \
+    --platforms=@toolchains_buildbuddy//platforms:linux_x86_64 \
+    --extra_execution_platforms=@toolchains_buildbuddy//platforms:linux_x86_64 \
+    --extra_toolchains=@toolchains_buildbuddy//toolchains/cc:ubuntu_gcc_x86_64
+```
+
+For customization options, see our [BzlMod Example](https://github.com/buildbuddy-io/buildbuddy-toolchain/tree/master/examples/bzlmod).
 
 #### WORKSPACE
 
@@ -42,14 +55,19 @@ load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy")
 buildbuddy(name = "buildbuddy_toolchain")
 ```
 
-Now you can use the toolchain in your BuildBuddy RBE builds. For example:
+You can build remotely using these flags:
 
 ```
-bazel build server \
-    --remote_executor=remote.buildbuddy.io \
-    --extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain \
+bazel build //your:target \
+    --noenable_bzlmod \
+    --enable_workspace \
+    --incompatible_strict_action_env \
+    --bes_results_url=https://app.buildbuddy.io/invocation/ \
+    --bes_backend=grpcs://remote.buildbuddy.io \
+    --remote_executor=grpcs://remote.buildbuddy.io \
+    --platforms=@buildbuddy_toolchain//:platform_linux_x86_64 \
     --extra_execution_platforms=@buildbuddy_toolchain//:platform_linux_x86_64 \
-    --platforms=@buildbuddy_toolchain//:platform_linux_x86_64
+    --extra_toolchains=@buildbuddy_toolchain//:ubuntu_cc_toolchain
 ```
 
 ## Java support
