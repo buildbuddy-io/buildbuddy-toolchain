@@ -63,6 +63,7 @@ def _buildbuddy_toolchain_impl(rctx):
         "%{msvc_version}": rctx.attr.msvc_version,
         "%{windows_kits_release}": rctx.attr.windows_kits_release,
         "%{windows_kits_version}": rctx.attr.windows_kits_version,
+        "%{msvc_env_tmp}": rctx.attr.msvc_env_tmp.replace("\\", "\\\\"),
     }
     rctx.template(
         "bin/cc_wrapper.sh",  # Co-located with the linker to help rules_go.
@@ -119,6 +120,7 @@ _buildbuddy_toolchain = repository_rule(
         "msvc_version": attr.string(),
         "windows_kits_release": attr.string(),
         "windows_kits_version": attr.string(),
+        "msvc_env_tmp": attr.string(),
         "extra_cxx_builtin_include_directories": attr.string_list(),
     },
     local = False,
@@ -151,6 +153,7 @@ def buildbuddy(
         msvc_version = "14.39.33519",
         windows_kits_release = "10",
         windows_kits_version = "10.0.22621.0",
+        msvc_env_tmp = "C:\\Users\\User\\AppData\\Local\\Temp",
         extra_cxx_builtin_include_directories = []):
     if java_version != "":
         # buildifier: disable=print
@@ -169,6 +172,7 @@ Please visit https://www.buildbuddy.io/docs/rbe-setup#java-toolchain for the rec
         msvc_version = msvc_version,
         windows_kits_release = windows_kits_release,
         windows_kits_version = windows_kits_version,
+        msvc_env_tmp = msvc_env_tmp,
         extra_cxx_builtin_include_directories = extra_cxx_builtin_include_directories,
     )
 
