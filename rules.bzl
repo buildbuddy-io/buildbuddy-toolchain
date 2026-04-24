@@ -201,14 +201,13 @@ def _split_image(image):
     tag = ""
     if "@" in image:
         image, digest = image.split("@", 1)
-    else:
-        # Split tags only on the last ':' after the last '/'. This avoids treating
-        # registry ports (for example mirror.local:5000/...) as image tags.
-        last_colon = image.rfind(":")
-        last_slash = image.rfind("/")
-        if last_colon > last_slash:
-            tag = image[last_colon + 1:]
-            image = image[:last_colon]
+    # Split tags only on the last ':' after the last '/'. This avoids treating
+    # registry ports (for example mirror.local:5000/...) as image tags.
+    last_colon = image.rfind(":")
+    last_slash = image.rfind("/")
+    if last_colon > last_slash:
+        tag = image[last_colon + 1:]
+        image = image[:last_colon]
 
     return image, tag, digest
 
