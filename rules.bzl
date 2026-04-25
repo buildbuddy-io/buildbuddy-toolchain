@@ -189,7 +189,9 @@ def _is_same_repository(a, b):
     repo_a, _, _ = _split_image(a)
     repo_b, _, _ = _split_image(b)
 
-    return repo_a == repo_b
+    # Allow mirrored images where the upstream repository is prefixed by a registry/cache path.
+    # Example: mirror.local:5000/gcr.io/flame-public/rbe-ubuntu22-04
+    return repo_a == repo_b or repo_a.endswith("/" + repo_b)
 
 def _split_image(image):
     if image.startswith("docker://"):
@@ -198,9 +200,15 @@ def _split_image(image):
     digest = ""
     tag = ""
     if "@" in image:
-        image, digest = image.split("@")
-    elif ":" in image:
-        image, tag = image.split(":")
+        image, digest = image.split("@", 1)
+
+    # Split tags only on the last ':' after the last '/'. This avoids treating
+    # registry ports (for example mirror.local:5000/...) as image tags.
+    last_colon = image.rfind(":")
+    last_slash = image.rfind("/")
+    if last_colon > last_slash:
+        tag = image[last_colon + 1:]
+        image = image[:last_colon]
 
     return image, tag, digest
 
