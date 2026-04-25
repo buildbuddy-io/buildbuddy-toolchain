@@ -201,6 +201,7 @@ def _split_image(image):
     tag = ""
     if "@" in image:
         image, digest = image.split("@", 1)
+
     # Split tags only on the last ':' after the last '/'. This avoids treating
     # registry ports (for example mirror.local:5000/...) as image tags.
     last_colon = image.rfind(":")
