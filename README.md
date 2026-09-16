@@ -1,6 +1,6 @@
 # BuildBuddy RBE Toolchain
 
-Currently supports Linux C/C++ (including CGO) on Ubuntu 16.04, 20.04, 22.04 and Windows 11 (or newer).
+Currently supports Linux C/C++ (including CGO) on Ubuntu 16.04, 20.04, 22.04, 24.04 and Windows 11 (or newer).
 
 ## Usage instructions
 
@@ -72,10 +72,9 @@ If you need a custom Java toolchain, see Bazel's docs on [Java toolchain configu
 
 The following Linux images are available for remote execution:
 
-### Ubuntu 16.04 image (**default**)
+### Ubuntu 16.04 image
 
-This image is the default when using the BuildBuddy toolchain. To
-reference it explicitly, you can declare the toolchain like this:
+To use Ubuntu 16.04, import the toolchain as follows:
 
 ```python
 load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy", "UBUNTU16_04_IMAGE")
@@ -113,9 +112,10 @@ This image includes the following build tools:
 - Python 3.8.10
 - Go 1.19.4
 
-### Ubuntu 22.04 image
+### Ubuntu 22.04 image (**default**)
 
-To use Ubuntu 22.04, import the toolchain as follows:
+This image is the default when using the BuildBuddy toolchain. To
+reference it explicitly, you can declare the toolchain like this:
 
 ```python
 load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy", "UBUNTU22_04_IMAGE")
