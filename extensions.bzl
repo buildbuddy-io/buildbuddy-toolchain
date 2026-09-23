@@ -50,13 +50,18 @@ def _ext_impl(mctx):
             "extra_cxx_builtin_include_directories": gcc_toolchain_tag.extra_cxx_builtin_include_directories,
         }
     if msvc_toolchain_tag:
-        macro_args |= {
-            "msvc_edition": msvc_toolchain_tag.msvc_edition,
-            "msvc_release": msvc_toolchain_tag.msvc_release,
-            "msvc_version": msvc_toolchain_tag.msvc_version,
-            "windows_kits_release": msvc_toolchain_tag.windows_kits_release,
-            "windows_kits_version": msvc_toolchain_tag.windows_kits_version,
-        }
+        if msvc_toolchain_tag.msvc_edition:
+            macro_args["msvc_edition"] = msvc_toolchain_tag.msvc_edition
+        if msvc_toolchain_tag.msvc_release:
+            macro_args["msvc_release"] = msvc_toolchain_tag.msvc_release
+        if msvc_toolchain_tag.msvc_version:
+            macro_args["msvc_version"] = msvc_toolchain_tag.msvc_version
+        if msvc_toolchain_tag.windows_kits_release:
+            macro_args["windows_kits_release"] = msvc_toolchain_tag.windows_kits_release
+        if msvc_toolchain_tag.windows_kits_version:
+            macro_args["windows_kits_version"] = msvc_toolchain_tag.windows_kits_version
+        if msvc_toolchain_tag.msvc_env_tmp:
+            macro_args["msvc_env_tmp"] = msvc_toolchain_tag.msvc_env_tmp
 
     bb_macro(
         name = "buildbuddy_toolchain",
@@ -79,6 +84,7 @@ buildbuddy = module_extension(
                 "msvc_version": attr.string(),
                 "windows_kits_release": attr.string(),
                 "windows_kits_version": attr.string(),
+                "msvc_env_tmp": attr.string(),
             },
         ),
         "platform": tag_class(

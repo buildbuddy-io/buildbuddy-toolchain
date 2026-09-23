@@ -8,7 +8,13 @@ load("@rules_cc//cc:defs.bzl", "cc_toolchain", "cc_toolchain_suite")
 load("@rules_java//java/toolchains:java_runtime.bzl", "java_runtime")
 load("@rules_java//toolchains:default_java_toolchain.bzl", "default_java_toolchain")
 load(":gcc_config.bzl", "GCC_BUILTIN_INCLUDE_PATHS")
-load(":msvc_config.bzl", "MSVC_BUILTIN_INCLUDE_PATHS")
+load(
+    ":msvc_config.bzl",
+    "MSVC_BUILTIN_INCLUDE_PATHS",
+    "MSVC_ENV_LIB_PATHS",
+    "MSVC_ENV_PATHS",
+    "MSVC_ENV_TMP",
+)
 load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 load(":windows_cc_toolchain_config.bzl", windows_cc_toolchain_config = "cc_toolchain_config")
 
@@ -292,34 +298,10 @@ windows_cc_toolchain_config(
     abi_version = "local",
     abi_libc_version = "local",
     toolchain_identifier = "msvc_toolchain_config",
-    msvc_env_tmp = "C:\\Users\\User\\AppData\\Local\\Temp",
-    msvc_env_path = ";".join([
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\CommonExtensions\\Microsoft\\FSharp\\Tools",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\IDE\\VC\\VCPackages",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Common7\\Tools\\",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\MSBuild\\Current\\bin\\Roslyn",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\Team Tools\\DiagnosticsHub\\Collector",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Tools\\MSVC\\%{msvc_version}\\bin\\HostX64\\x64",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\\\MSBuild\\Current\\Bin\\amd64",
-    ]),
-    msvc_env_include = ";".join([
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\cppwinrt",
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\shared",
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\um",
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\winrt",
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Include\\%{windows_kits_version}\\ucrt",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Auxiliary\\VS\\include",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Tools\\MSVC\\%{msvc_version}\\include",
-    ]),
-    msvc_env_lib = ";".join([
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Lib\\%{windows_kits_version}\\um\\x64",
-        "C:\\Program Files (x86)\\Windows Kits\\%{windows_kits_release}\\Lib\\%{windows_kits_version}\\ucrt\\x64",
-        "C:\\Program Files\\Microsoft Visual Studio\\%{msvc_release}\\%{msvc_edition}\\VC\\Tools\\MSVC\\%{msvc_version}\\lib\\x64",
-    ]),
+    msvc_env_tmp = MSVC_ENV_TMP,
+    msvc_env_path = ";".join(MSVC_ENV_PATHS),
+    msvc_env_include = ";".join(MSVC_BUILTIN_INCLUDE_PATHS),
+    msvc_env_lib = ";".join(MSVC_ENV_LIB_PATHS),
     msvc_cl_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/cl.exe",
     msvc_ml_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/ml64.exe",
     msvc_link_path = "C:/Program Files/Microsoft Visual Studio/%{msvc_release}/%{msvc_edition}/VC/Tools/MSVC/%{msvc_version}/bin/HostX64/x64/link.exe",

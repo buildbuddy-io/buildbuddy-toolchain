@@ -34,6 +34,7 @@ buildbuddy = use_extension("@toolchains_buildbuddy//:extensions.bzl", "buildbudd
 #         msvc_version = "14.39.33519",
 #         windows_kits_release = "10",
 #         windows_kits_version = "10.0.22621.0",
+#         msvc_env_tmp = "C:\\Users\\User\\AppData\\Local\\Temp",
 #     )
 
 # All relevant toolchain and platform targets should be available under "@buildbuddy_toolchain//..." repository
